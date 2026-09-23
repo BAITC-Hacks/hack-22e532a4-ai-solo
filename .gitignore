@@ -14,3 +14,4 @@ results/*.json
 !results/document_evaluation_fastembed.json
 !results/real_pair_regression.json
 *.log
+presentation-build/
