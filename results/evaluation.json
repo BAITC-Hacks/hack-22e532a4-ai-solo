@@ -1,0 +1,483 @@
+{
+  "dataset_sha256": "b4a33aba46b1c895488b074c4c1bdabf845736f95ed999b6a7c8615f73904501",
+  "timestamp_utc": "2026-09-23T09:08:09.701998+00:00",
+  "git_revision": "cc47a183d7a80d3374fc2234bcdd63804ac478da",
+  "git_dirty": true,
+  "mode": "offline",
+  "model": "gpt-4.1-mini",
+  "live_verification": "NOT TESTED",
+  "summary": {
+    "passed": 24,
+    "total": 24,
+    "failed": 0
+  },
+  "categories": {
+    "structure_roles": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "function_matching": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    "loss_coverage": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "duplication": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "conflict_interest": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "versions_citations": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "related_class": {
+    "tp": 15,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+  },
+  "results": [
+    {
+      "id": "structure-01",
+      "category": "structure_roles",
+      "expected": {
+        "related": true,
+        "score_min": 0.94
+      },
+      "actual": {
+        "score": 1.0,
+        "related": true,
+        "strong_overlap": true,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "structure-02",
+      "category": "structure_roles",
+      "expected": {
+        "related": true,
+        "score_min": 0.94
+      },
+      "actual": {
+        "score": 1.0,
+        "related": true,
+        "strong_overlap": true,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "structure-03",
+      "category": "structure_roles",
+      "expected": {
+        "related": false,
+        "score_max": 0.37
+      },
+      "actual": {
+        "score": 0.0,
+        "related": false,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "structure-04",
+      "category": "structure_roles",
+      "expected": {
+        "related": false,
+        "score_max": 0.37
+      },
+      "actual": {
+        "score": 0.3657,
+        "related": false,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "match-01",
+      "category": "function_matching",
+      "expected": {
+        "related": true,
+        "score_min": 0.38
+      },
+      "actual": {
+        "score": 0.6231,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "контролирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "match-02",
+      "category": "function_matching",
+      "expected": {
+        "related": true,
+        "score_min": 0.55
+      },
+      "actual": {
+        "score": 0.7096,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "match-03",
+      "category": "function_matching",
+      "expected": {
+        "related": true,
+        "score_min": 0.38
+      },
+      "actual": {
+        "score": 0.5512,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "контролирует",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "match-04",
+      "category": "function_matching",
+      "expected": {
+        "related": true,
+        "score_min": 0.38
+      },
+      "actual": {
+        "score": 0.4918,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "консультирует",
+        "after_authority": "консультирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "match-05",
+      "category": "function_matching",
+      "expected": {
+        "related": true,
+        "score_min": 0.38
+      },
+      "actual": {
+        "score": 0.7348,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "контролирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "match-06",
+      "category": "function_matching",
+      "expected": {
+        "related": false,
+        "score_max": 0.37
+      },
+      "actual": {
+        "score": 0.0109,
+        "related": false,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "loss-01",
+      "category": "loss_coverage",
+      "expected": {
+        "related": false,
+        "score_max": 0.37
+      },
+      "actual": {
+        "score": 0.0,
+        "related": false,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "контролирует",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "loss-02",
+      "category": "loss_coverage",
+      "expected": {
+        "related": true,
+        "score_min": 0.38
+      },
+      "actual": {
+        "score": 0.6691,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "консультирует",
+        "after_authority": "контролирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "loss-03",
+      "category": "loss_coverage",
+      "expected": {
+        "related": false,
+        "score_max": 0.37
+      },
+      "actual": {
+        "score": 0.0128,
+        "related": false,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "loss-04",
+      "category": "loss_coverage",
+      "expected": {
+        "related": true,
+        "score_min": 0.38
+      },
+      "actual": {
+        "score": 0.4285,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "duplicate-01",
+      "category": "duplication",
+      "expected": {
+        "strong_overlap": true
+      },
+      "actual": {
+        "score": 1.0,
+        "related": true,
+        "strong_overlap": true,
+        "scope_conflict": false,
+        "before_authority": "контролирует",
+        "after_authority": "контролирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "duplicate-02",
+      "category": "duplication",
+      "expected": {
+        "scope_conflict": true,
+        "strong_overlap": false
+      },
+      "actual": {
+        "score": 0.3457,
+        "related": false,
+        "strong_overlap": false,
+        "scope_conflict": true,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "duplicate-03",
+      "category": "duplication",
+      "expected": {
+        "strong_overlap": false
+      },
+      "actual": {
+        "score": 0.4426,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "консультирует",
+        "after_authority": "консультирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "duplicate-04",
+      "category": "duplication",
+      "expected": {
+        "related": true
+      },
+      "actual": {
+        "score": 0.7577,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "контролирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "conflict-01",
+      "category": "conflict_interest",
+      "expected": {
+        "before_authority": "исполняет",
+        "after_authority": "утверждает",
+        "related": true
+      },
+      "actual": {
+        "score": 0.5254,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "утверждает"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "conflict-02",
+      "category": "conflict_interest",
+      "expected": {
+        "before_authority": "исполняет",
+        "after_authority": "контролирует",
+        "related": true
+      },
+      "actual": {
+        "score": 0.8791,
+        "related": true,
+        "strong_overlap": true,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "контролирует"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "source-01",
+      "category": "versions_citations",
+      "expected": {
+        "related": true
+      },
+      "actual": {
+        "score": 0.7093,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "source-02",
+      "category": "versions_citations",
+      "expected": {
+        "related": true
+      },
+      "actual": {
+        "score": 0.5885,
+        "related": true,
+        "strong_overlap": false,
+        "scope_conflict": false,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "source-03",
+      "category": "versions_citations",
+      "expected": {
+        "scope_conflict": true
+      },
+      "actual": {
+        "score": 0.1683,
+        "related": false,
+        "strong_overlap": false,
+        "scope_conflict": true,
+        "before_authority": "исполняет",
+        "after_authority": "исполняет"
+      },
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "source-04",
+      "category": "versions_citations",
+      "expected": {
+        "related": true,
+        "score_min": 0.94
+      },
+      "actual": {
+        "score": 1.0,
+        "related": true,
+        "strong_overlap": true,
+        "scope_conflict": false,
+        "before_authority": "контролирует",
+        "after_authority": "контролирует"
+      },
+      "status": "PASS",
+      "errors": []
+    }
+  ]
+}

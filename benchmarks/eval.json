@@ -1,0 +1,31 @@
+[
+  {"id":"structure-01","category":"structure_roles","before_text":"Департамент непрерывного мониторинга системы внутреннего контроля (ДНМ)","after_text":"Департамент непрерывного мониторинга системы внутреннего контроля (ДНМ)","expect":{"related":true,"score_min":0.94}},
+  {"id":"structure-02","category":"structure_roles","before_text":"Департамент контроля качества аудита и методологии","after_text":"Департамент контроля качества аудита и методологии","expect":{"related":true,"score_min":0.94}},
+  {"id":"structure-03","category":"structure_roles","before_text":"Департамент непрерывного мониторинга","after_text":"Департамент ИТ-аудита и анализа данных","expect":{"related":false,"score_max":0.37}},
+  {"id":"structure-04","category":"structure_roles","before_text":"Директор направления внутреннего аудита","after_text":"Директор операционного аудита","expect":{"related":false,"score_max":0.37}},
+
+  {"id":"match-01","category":"function_matching","before_text":"взаимодействует с субъектами СВК и оценивает качество результатов их работы","after_text":"осуществляют взаимодействие с субъектами СВК, включая оценку качества и надежности результатов","expect":{"related":true,"score_min":0.38}},
+  {"id":"match-02","category":"function_matching","before_text":"выявляет риски с недостаточным или дублирующим покрытием в Карте гарантий","after_text":"выявление рисков с недостаточным и дублирующим покрытием субъектами СВК в рамках Карты гарантий","expect":{"related":true,"score_min":0.55}},
+  {"id":"match-03","category":"function_matching","before_text":"контролирует выполнение аудиторской проверки","after_text":"осуществляет контроль над выполнением проверки","expect":{"related":true,"score_min":0.38}},
+  {"id":"match-04","category":"function_matching","before_text":"готовит предложения для включения в план работ","after_text":"формирует предложения к плану деятельности внутреннего аудита","expect":{"related":true,"score_min":0.38}},
+  {"id":"match-05","category":"function_matching","before_text":"оценивает надежность системы внутреннего контроля","after_text":"проводит оценку надежности внутреннего контроля","expect":{"related":true,"score_min":0.38}},
+  {"id":"match-06","category":"function_matching","before_text":"ведет учет отпусков сотрудников","after_text":"оценивает риски информационной безопасности","expect":{"related":false,"score_max":0.37}},
+
+  {"id":"loss-01","category":"loss_coverage","before_text":"проверяет соблюдение международных стандартов внутреннего аудита","after_text":"составляет график отпусков работников","expect":{"related":false,"score_max":0.37}},
+  {"id":"loss-02","category":"loss_coverage","before_text":"осуществляет мониторинг исполнения рекомендаций","after_text":"контролирует выполнение рекомендаций по итогам проверок","expect":{"related":true,"score_min":0.38}},
+  {"id":"loss-03","category":"loss_coverage","before_text":"формирует карту гарантий по рискам","after_text":"ведет реестр оборудования и лицензий","expect":{"related":false,"score_max":0.37}},
+  {"id":"loss-04","category":"loss_coverage","before_text":"запрашивает информацию, необходимую для функций внутреннего аудита","after_text":"получает необходимые для аудита сведения у руководителей подразделений","expect":{"related":true,"score_min":0.38}},
+
+  {"id":"duplicate-01","category":"duplication","before_text":"контролирует своевременность предоставления информации для аудита","after_text":"контролирует своевременность предоставления информации для аудита","before_scope":"аудит","after_scope":"аудит","expect":{"strong_overlap":true}},
+  {"id":"duplicate-02","category":"duplication","before_text":"организует аудит информационных систем и данных","after_text":"организует аудит операционных и поддерживающих процессов","before_scope":"ИТ, данные","after_scope":"операционные, поддерживающие","expect":{"scope_conflict":true,"strong_overlap":false}},
+  {"id":"duplicate-03","category":"duplication","before_text":"готовит предложения по плану аудита","after_text":"готовит предложения по развитию кадров","before_scope":"аудит","after_scope":"персонал","expect":{"strong_overlap":false}},
+  {"id":"duplicate-04","category":"duplication","before_text":"оценивает качество результатов субъектов СВК","after_text":"проверяет качество результатов субъектов СВК","before_scope":"СВК","after_scope":"СВК","expect":{"related":true}},
+
+  {"id":"conflict-01","category":"conflict_interest","before_text":"исполняет аудиторскую проверку процесса закупок","after_text":"утверждает результаты аудиторской проверки процесса закупок","expect":{"before_authority":"исполняет","after_authority":"утверждает","related":true}},
+  {"id":"conflict-02","category":"conflict_interest","before_text":"проводит проверку качества рабочих документов","after_text":"контролирует качество рабочих документов","expect":{"before_authority":"исполняет","after_authority":"контролирует","related":true}},
+
+  {"id":"source-01","category":"versions_citations","before_text":"9.37. поручить функции Директору направления внутреннего аудита","after_text":"9.37. поручить функции Директору операционного аудита","expect":{"related":true}},
+  {"id":"source-02","category":"versions_citations","before_text":"12.1.4. результаты программы обеспечения и повышения качества внутреннего аудита, включая информацию о соблюдении международных стандартов","after_text":"12.1.4. результаты программы обеспечения и повышения качества внутреннего аудита и плана мероприятий по соблюдению требований качества","expect":{"related":true}},
+  {"id":"source-03","category":"versions_citations","before_text":"5.3.2. аудит ИТ-систем и анализ данных","after_text":"5.3.2. аудит операционных и поддерживающих процессов","before_scope":"ИТ, данные","after_scope":"операционные, поддерживающие","expect":{"scope_conflict":true}},
+  {"id":"source-04","category":"versions_citations","before_text":"точная цитата: контролирует выполнение проверки","after_text":"точная цитата: контролирует выполнение проверки","expect":{"related":true,"score_min":0.94}}
+]
