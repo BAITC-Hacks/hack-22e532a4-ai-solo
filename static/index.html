@@ -49,6 +49,13 @@
         </div>
       </section>
 
+      <section class="jury-guide" aria-labelledby="jury-title">
+        <div class="section-heading"><div><p class="step-label">Для жюри · маршрут на 3 минуты</p><h2 id="jury-title">Изменение → доказательство → решение</h2></div><button id="jury-demo" type="button" class="button button-primary">Проверить на демо</button></div>
+        <p>Отдельное сравнение, реальные вычисления. Ваши текущие документы сохранятся. Первый запуск может занять больше времени из-за загрузки модели.</p>
+        <ol class="jury-steps"><li><strong>1. Найдите изменение</strong><span>Откройте один из показательных случаев.</span></li><li><strong>2. Проверьте основание</strong><span>Сверьте точные цитаты обеих редакций.</span></li><li><strong>3. Зафиксируйте решение</strong><span>Добавьте комментарий и откройте HTML-отчёт.</span></li></ol>
+        <p id="jury-status" role="status">3 минуты — целевой маршрут после подготовки окружения, не обещание скорости анализа.</p>
+      </section>
+
       <section class="upload-section" aria-labelledby="documents-title">
         <div class="section-heading">
           <div><p class="step-label">01 · Источники</p><h2 id="documents-title">Два комплекта документов</h2></div>
@@ -112,6 +119,7 @@
         </div>
 
         <div id="results-content" class="hidden">
+          <div id="jury-cases" class="jury-cases" aria-label="Показательные изменения"></div>
           <div id="summary-cards" class="summary-cards"></div>
           <div class="toolbar">
             <div class="field search-field"><label for="result-search">Поиск по результатам</label><div class="input-shell"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="result-search" type="search" placeholder="Функция, владелец, пункт…" autocomplete="off" /></div></div>

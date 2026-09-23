@@ -1,3 +1,15 @@
+.jury-guide { margin-bottom: 32px; padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-raised); }
+.jury-guide p, .jury-case p { color: var(--ink-soft); }
+.jury-steps, .jury-cases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.jury-steps { list-style: none; padding: 0; margin: 24px 0; }
+.jury-steps li { border-top: 2px solid var(--teal); padding-top: 12px; }
+.jury-steps span { display: block; margin-top: 8px; color: var(--ink-soft); }
+.jury-cases { margin-bottom: 24px; }
+.jury-case { padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-raised); }
+.jury-case button { min-height: 44px; white-space: normal; }
+#evidence-panel { scroll-margin-top: 96px; }
+@media (max-width: 767px) { .jury-steps, .jury-cases { grid-template-columns: 1fr; } .jury-guide { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 :root {
   color-scheme: light;
   --paper: #f4f0e6;

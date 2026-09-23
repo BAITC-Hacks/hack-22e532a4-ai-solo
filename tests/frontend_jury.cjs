@@ -1,0 +1,21 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const elements = new Map();
+const element = selector => {
+  if (!elements.has(selector)) elements.set(selector, {innerHTML:'',value:'',textContent:'',addEventListener(){}});
+  return elements.get(selector);
+};
+const context = vm.createContext({localStorage:{getItem(){return null;}},document:{querySelector:element,querySelectorAll(){return [];}}});
+const code = fs.readFileSync('static/app.js','utf8').replace(/\ninit\(\);\s*$/, '\n');
+vm.runInContext(code, context);
+vm.runInContext('renderJuryCases([])',context);
+assert.equal((element('#jury-cases').innerHTML.match(/не найден/g)||[]).length,3);
+vm.runInContext(`renderJuryCases([{id:'safe',finding_type:'transferred'}])`,context);
+assert.match(element('#jury-cases').innerHTML,/data-jury-finding="safe"/);
+assert.equal((element('#jury-cases').innerHTML.match(/не найден/g)||[]).length,2);
+vm.runInContext(`renderJuryCases([{id:'"><script>alert(1)</script>',finding_type:'changed'}])`,context);
+assert.ok(!element('#jury-cases').innerHTML.includes('<script>'));
+vm.runInContext('renderJuryCases([])',context);
+assert.ok(!element('#jury-cases').innerHTML.includes('data-jury-finding'));
+console.log('PASS: jury empty state, actual findings, absent categories, escaping, reset');

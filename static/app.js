@@ -108,6 +108,11 @@ async function upload(side, files) {
 
 function setBusy(busy, text = "") {
   state.busy = busy;
+  $('#jury-demo').disabled = busy;
+  $('#jury-demo').setAttribute('aria-busy', String(busy));
+  $('#new-comparison').disabled = busy;
+  $('#run-history').disabled = busy;
+  $$('.upload-card input').forEach(input => { input.disabled = busy; });
   $("#progress").classList.toggle("hidden", !busy);
   if (text) $("#progress-text").textContent = text;
   $("#demo-button").disabled = busy;
@@ -143,9 +148,11 @@ async function analyze() {
     await refreshRuns();
     renderResult();
     $("#results-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    $('#jury-status').textContent = (state.comparison.documents.some(doc => doc.filename.startsWith('SYNTHETIC_')) ? 'Синтетический пример. ' : '') + 'Анализ готов. Откройте показательный случай, проверьте цитаты и сохраните решение. Выводы алгоритма не заменяют эксперта.';
     toast(state.result.run.status === 'partial' ? 'Анализ неполный: проверьте источники и предупреждения' : 'Анализ завершён, источники проверены');
   } catch (error) {
     const box = $("#result-error");
+    $('#jury-status').textContent = 'Анализ не завершён. Используйте «Повторить» рядом с ошибкой.';
     box.querySelector("span").textContent = error.message;
     box.classList.remove("hidden");
     $("#empty-state").classList.remove("hidden");
@@ -160,6 +167,7 @@ function badgeClass(type) {
 
 function renderResult() {
   const findings = state.result?.findings || [];
+  renderJuryCases(findings);
   $('#partial-warning').classList.toggle('hidden', state.result?.run?.status !== 'partial');
   $("#empty-state").classList.toggle("hidden", findings.length > 0);
   $("#results-content").classList.toggle("hidden", findings.length === 0);
@@ -258,6 +266,7 @@ async function saveReview(decision) {
     const review = await api(`/api/findings/${state.selectedId}/review`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ decision, note: $('#review-note').value }) });
     const item = state.result.findings.find((f) => f.id === state.selectedId); item.review = review;
     item.review_history = [...(item.review_history || []), review];
+    $('#jury-status').textContent = 'Решение сохранено. Шаг 3: откройте HTML-отчёт и проверьте цитаты и ваш комментарий.';
     selectFinding(state.selectedId, false); toast("Решение сохранено отдельно от машинного вывода");
   } catch (error) { $("#review-status").textContent = error.message; }
 }
@@ -329,4 +338,47 @@ async function refreshRuns() {
   $('#run-history').innerHTML = runs.length ? runs.map(run => `<option value="${escapeHtml(run.id)}">${escapeHtml(new Date(run.started_at).toLocaleString('ru-RU'))} · ${escapeHtml(run.status)} · ${escapeHtml(run.model_mode)}</option>`).join('') : '<option value="">Анализ ещё не запускался</option>';
 }
 
+function renderJuryCases(findings) {
+  const groups = [
+    {label:'Куда ушла функция?', types:['transferred','split','merged']},
+    {label:'Что изменилось?', types:['changed','structure_transformed','structure_added','new']},
+    {label:'Что требует проверки?', types:['potential_loss','potential_conflict','possible_duplicate','insufficient_data']},
+  ];
+  $('#jury-cases').innerHTML = groups.map(group => {
+    const item = findings.find(finding => group.types.includes(finding.finding_type));
+    return `<article class="jury-case"><strong>${group.label}</strong>${item ? `<p>${escapeHtml(typeLabels[item.finding_type])}</p><button type="button" class="button button-secondary" data-jury-finding="${escapeHtml(item.id)}">Проверить основание</button>` : '<p>В этом запуске такой случай не найден. Это не гарантия отсутствия риска.</p>'}</article>`;
+  }).join('');
+  $$('[data-jury-finding]').forEach(button => button.addEventListener('click', () => {
+    $('#type-filter').value = ''; $('#evidence-filter').value = ''; $('#result-search').value = '';
+    selectFinding(button.dataset.juryFinding);
+    $('#evidence-panel').scrollIntoView({block:'start'});
+    $('#detail-title').setAttribute('tabindex','-1'); $('#detail-title').focus({preventScroll:true});
+    $('#jury-status').textContent = 'Шаг 2: прочитайте обе цитаты и границу вывода. Затем сохраните решение с комментарием.';
+  }));
+}
+
+async function startJuryDemo() {
+  if (state.busy) return;
+  setBusy(true, 'Создаём отдельное демонстрационное сравнение…');
+  clearError('#upload-error');
+  try {
+    const created = await api('/api/comparisons', {method:'POST', headers:{'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID()}, body:JSON.stringify({name:'Проверка жюри · контрольная пара'})});
+    state.comparisonId = created.id;
+    localStorage.setItem('baqbaq-comparison', created.id);
+    state.comparison = {...created, documents:[]}; state.result = null; state.selectedId = null;
+    history.replaceState(null, '', location.pathname);
+    renderResult();
+    $('#evidence-content').classList.add('hidden'); $('#evidence-placeholder').classList.remove('hidden');
+    await refreshComparison(); await refreshRuns();
+    const loaded = await api(`/api/comparisons/${created.id}/demo`, {method:'POST'});
+    $('#jury-status').textContent = loaded.dataset === 'synthetic' ? 'Синтетический пример, не оригиналы организатора. Выполняется обычный анализ.' : 'Подключены контрольные документы организатора. Выполняется обычный анализ.';
+    await refreshComparison();
+    await analyze();
+  } catch (error) {
+    showError('#upload-error', error.message);
+    $('#jury-status').textContent = 'Демо не завершено. Проверьте ошибку ниже и повторите запуск.';
+  } finally { setBusy(false); }
+}
+
+$('#jury-demo').addEventListener('click', startJuryDemo);
 init();
