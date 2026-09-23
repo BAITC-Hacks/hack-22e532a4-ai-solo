@@ -1,0 +1,26 @@
+[Unit]
+Description=BaqBaq isolated jury demo
+After=network-online.target
+
+[Service]
+User=baqbaq
+Group=baqbaq
+WorkingDirectory=/opt/baqbaq/app
+ExecStart=/opt/baqbaq/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8022 --workers 1 --limit-concurrency 8
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/baqbaq/data /opt/baqbaq/uploads /opt/baqbaq/cache
+Environment=HF_HOME=/opt/baqbaq/cache
+Environment=FASTEMBED_CACHE_PATH=/opt/baqbaq/cache/fastembed
+Environment=HOME=/opt/baqbaq/cache
+MemoryMax=3G
+CPUQuota=150%
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target
