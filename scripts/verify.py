@@ -18,4 +18,5 @@ def run(command: list[str]) -> None:
 if __name__ == "__main__":
     run([sys.executable, "-m", "pytest"])
     run([sys.executable, "scripts/evaluate.py"])
+    run([sys.executable, "scripts/evaluate_documents.py"])
     print("verify: OK")

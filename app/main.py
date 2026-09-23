@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 import tempfile
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -15,6 +16,8 @@ from .config import ROOT, settings
 from .db import Store
 from .ingestion import IngestionError, MAX_BYTES, parse_file, safe_filename, store_upload
 from .model_adapter import ModelAdapter, ModelError
+from .gateway import Gateway
+from .agent import answer_with_tools
 from .reporting import html_report, markdown_report
 from .semantic import authority, scope_conflicts, similarity
 
@@ -44,6 +47,7 @@ class ReviewCreate(BaseModel):
 class AskRequest(BaseModel):
     question: str = Field(min_length=3, max_length=2000)
     finding_id: str | None = None
+    run_id: str | None = None
 
 
 class EvaluationProbe(BaseModel):
@@ -62,6 +66,7 @@ def health() -> dict:
         "live_ready": model.live_ready,
         "db": str(settings.db_path),
         "supported_formats": ["docx", "pdf (text)", "xlsx"],
+        'search_mode': os.getenv('BAQBAQ_SEARCH_MODE', 'fastembed'),
     }
 
 
@@ -131,9 +136,11 @@ async def upload_documents(
             while chunk := await upload.read(1024 * 1024):
                 size += len(chunk)
                 if size > MAX_BYTES:
-                    temp_path.unlink(missing_ok=True)
-                    raise HTTPException(status_code=413, detail=f"{filename}: файл превышает 25 МБ")
+                    break
                 temp.write(chunk)
+        if size > MAX_BYTES:
+            temp_path.unlink(missing_ok=True)
+            raise HTTPException(status_code=413, detail=f"{filename}: файл превышает 25 МБ")
         try:
             stored = store_upload(temp_path, settings.upload_dir, comparison_id, side)
             renamed = stored.with_name(f"{stored.name.split('_', 1)[0]}_{filename}")
@@ -156,7 +163,20 @@ def load_demo(comparison_id: str) -> dict:
     paths = [("before", settings.demo_before), ("after", settings.demo_after)]
     missing = [str(path) for _, path in paths if not path.exists()]
     if missing:
-        raise HTTPException(status_code=404, detail="Не найдены demo-файлы: " + "; ".join(missing))
+        from .fixtures import document_bytes, DEMO_BEFORE, DEMO_AFTER
+        output = []
+        for side, lines in [('before', DEMO_BEFORE), ('after', DEMO_AFTER)]:
+            name = f'SYNTHETIC_{side}.docx'
+            with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as temp:
+                temp.write(document_bytes(lines))
+                temp_path = Path(temp.name)
+            try:
+                stored = store_upload(temp_path, settings.upload_dir, comparison_id, side)
+                output.append(store.add_document(comparison_id, side, parse_file(stored, name), str(stored)))
+            finally:
+                temp_path.unlink(missing_ok=True)
+        store.set_comparison_status(comparison_id, 'documents_ready')
+        return {'documents':output,'dataset':'synthetic','note':'Оригиналы не подключены; загружен явно синтетический открытый пример.'}
     output = []
     for side, source in paths:
         try:
@@ -184,9 +204,29 @@ def analyze(comparison_id: str) -> dict:
 
 
 @app.get("/api/comparisons/{comparison_id}/result")
-def result(comparison_id: str) -> dict:
+def result(comparison_id: str, run_id: str | None = None) -> dict:
     _require_comparison(comparison_id)
-    return store.analysis_result(comparison_id)
+    try:
+        return store.analysis_result(comparison_id, run_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get('/api/comparisons/{comparison_id}/runs')
+def runs(comparison_id: str) -> list[dict]:
+    _require_comparison(comparison_id)
+    return store.list_runs(comparison_id)
+
+
+@app.get('/api/comparisons/{comparison_id}/progress')
+def progress(comparison_id: str) -> dict:
+    _require_comparison(comparison_id)
+    run = store.latest_run(comparison_id)
+    if not run:
+        return {'status': 'idle', 'last_completed_tool': None}
+    with store.connect() as db:
+        event = db.execute('SELECT tool,status FROM trace_events WHERE run_id=? ORDER BY sequence DESC LIMIT 1', (run['id'],)).fetchone()
+    return {'status': run['status'], 'run_id': run['id'], 'last_completed_tool': event['tool'] if event else None}
 
 
 @app.get("/api/comparisons/{comparison_id}/sources/{span_id}")
@@ -209,20 +249,24 @@ def review(finding_id: str, payload: ReviewCreate) -> dict:
 @app.post("/api/comparisons/{comparison_id}/ask")
 def ask(comparison_id: str, payload: AskRequest) -> dict:
     comparison_item = _require_comparison(comparison_id)
-    result_data = store.analysis_result(comparison_id)
+    try:
+        result_data = store.analysis_result(comparison_id, payload.run_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
     evidence: list[dict] = []
     if payload.finding_id:
         finding = next((item for item in result_data["findings"] if item["id"] == payload.finding_id), None)
         if not finding:
             raise HTTPException(status_code=404, detail="Выбранный вывод не найден")
         evidence = [item for item in (finding.get("before_source"), finding.get("after_source")) if item]
-    if not evidence:
-        evidence = store.search_spans(comparison_id, payload.question, 8)
     adapter = ModelAdapter(comparison_item["model_mode"], settings.model, settings.base_url)
+    gateway = Gateway(store, comparison_id, (result_data.get('run') or {}).get('id'))
     try:
-        reply = adapter.answer(payload.question, evidence)
+        reply = answer_with_tools(adapter, gateway, payload.question, evidence)
     except ModelError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+    finally:
+        gateway.persist_trace()
     message = store.save_message(
         comparison_id,
         (result_data.get("run") or {}).get("id"),
@@ -232,14 +276,17 @@ def ask(comparison_id: str, payload: AskRequest) -> dict:
         reply.source_ids,
         reply.mode,
     )
-    return message
+    return {**message, 'request_id': gateway.request_id, 'trace': gateway.trace}
 
 
 @app.get("/api/comparisons/{comparison_id}/report")
-def report(comparison_id: str, format: Literal["markdown", "html"] = "markdown") -> Response:
+def report(comparison_id: str, format: Literal["markdown", "html"] = "markdown", run_id: str | None = None) -> Response:
     item = _require_comparison(comparison_id)
-    result_data = store.analysis_result(comparison_id)
-    if not result_data.get("run") or result_data["run"]["status"] != "completed":
+    try:
+        result_data = store.analysis_result(comparison_id, run_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    if not result_data.get("run") or result_data["run"]["status"] not in {"completed", "partial"}:
         raise HTTPException(status_code=409, detail="Сначала завершите анализ")
     if format == "html":
         content = html_report(item, result_data)

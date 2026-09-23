@@ -56,6 +56,15 @@ class Store:
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS run_snapshots (
+                    run_id TEXT PRIMARY KEY REFERENCES analysis_runs(id),
+                    documents_json TEXT NOT NULL,
+                    metadata_json TEXT NOT NULL DEFAULT '{}'
+                );
+                CREATE TABLE IF NOT EXISTS model_cache (
+                    cache_key TEXT PRIMARY KEY,
+                    payload_json TEXT NOT NULL
+                );
                 CREATE TABLE IF NOT EXISTS document_versions (
                     id TEXT PRIMARY KEY,
                     comparison_id TEXT NOT NULL REFERENCES comparisons(id) ON DELETE CASCADE,
@@ -376,7 +385,7 @@ class Store:
                 (status, utcnow(), error, run_id),
             )
         if row:
-            self.set_comparison_status(row[0], "ready" if status == "completed" else "error")
+            self.set_comparison_status(row[0], "ready" if status == "completed" else "partial" if status == "partial" else "error")
 
     def add_trace(
         self,
@@ -463,6 +472,8 @@ class Store:
             finding.get("before_span_id") or "",
             finding.get("after_span_id") or "",
             finding["title"],
+            finding.get('before_function') or '',
+            finding.get('after_function') or '',
         )
         with self.connect() as db:
             db.execute(
@@ -499,8 +510,33 @@ class Store:
             ).fetchone()
             return dict(row) if row else None
 
-    def analysis_result(self, comparison_id: str) -> dict[str, Any]:
-        run = self.latest_run(comparison_id)
+    def list_runs(self, comparison_id: str) -> list[dict[str, Any]]:
+        with self.connect() as db:
+            return [dict(row) for row in db.execute('SELECT * FROM analysis_runs WHERE comparison_id=? ORDER BY started_at DESC', (comparison_id,))]
+
+    def snapshot_run(self, run_id: str, documents: list, metadata: dict) -> None:
+        with self.connect() as db:
+            db.execute('INSERT OR REPLACE INTO run_snapshots VALUES (?,?,?)',
+                       (run_id, json.dumps(documents, ensure_ascii=False), json.dumps(metadata, ensure_ascii=False)))
+
+    def cache_get(self, key: str):
+        with self.connect() as db:
+            row = db.execute('SELECT payload_json FROM model_cache WHERE cache_key=?', (key,)).fetchone()
+            return json.loads(row[0]) if row else None
+
+    def cache_put(self, key: str, value) -> None:
+        with self.connect() as db:
+            db.execute('INSERT OR REPLACE INTO model_cache VALUES (?,?)', (key, json.dumps(value, ensure_ascii=False)))
+
+    def analysis_result(self, comparison_id: str, run_id: str | None = None) -> dict[str, Any]:
+        if run_id:
+            with self.connect() as db:
+                row = db.execute('SELECT * FROM analysis_runs WHERE id=? AND comparison_id=?', (run_id, comparison_id)).fetchone()
+                if not row:
+                    raise KeyError('Запуск не найден в этом сравнении')
+                run = dict(row)
+        else:
+            run = self.latest_run(comparison_id)
         if not run:
             return {"run": None, "findings": [], "trace": [], "summary": {}}
         with self.connect() as db:
@@ -517,6 +553,7 @@ class Store:
                     (item["id"],),
                 ).fetchone()
                 item["review"] = dict(decision) if decision else None
+                item['review_history'] = [dict(r) for r in db.execute('SELECT * FROM review_decisions WHERE finding_id=? ORDER BY created_at', (item['id'],))]
                 findings.append(item)
             trace_rows = db.execute(
                 "SELECT * FROM trace_events WHERE run_id=? ORDER BY sequence", (run["id"],)
@@ -530,7 +567,11 @@ class Store:
         counts: dict[str, int] = {}
         for item in findings:
             counts[item["finding_type"]] = counts.get(item["finding_type"], 0) + 1
-        return {"run": run, "findings": findings, "trace": trace, "summary": counts}
+        with self.connect() as db:
+            snapshot = db.execute('SELECT * FROM run_snapshots WHERE run_id=?', (run['id'],)).fetchone()
+        return {"run": run, "findings": findings, "trace": trace, "summary": counts,
+                'documents': json.loads(snapshot['documents_json']) if snapshot else [],
+                'metadata': json.loads(snapshot['metadata_json']) if snapshot else {}}
 
     def save_review(self, finding_id: str, decision: str, note: str) -> dict[str, Any]:
         rid = f"review_{uuid.uuid4().hex[:16]}"

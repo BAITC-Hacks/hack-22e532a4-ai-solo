@@ -122,7 +122,7 @@ h3 { font-size: 21px; line-height: 1.2; }
 .inline-alert.error { background: var(--rust-bg); color: var(--rust); border: 1px solid color-mix(in srgb, var(--rust) 30%, transparent); }
 .text-button { min-height: 40px; padding: 0 8px; color: inherit; border: 0; background: none; text-decoration: underline; font-weight: 700; cursor: pointer; }
 .results-heading { align-items: center; }
-.report-actions { display: flex; gap: 8px; }
+.report-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .empty-state { min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1px solid var(--line); background: var(--paper-raised); border-radius: 12px; padding: 30px; }
 .empty-state h3 { margin-top: 26px; }
 .empty-state p { max-width: 520px; color: var(--ink-soft); }
@@ -137,7 +137,7 @@ h3 { font-size: 21px; line-height: 1.2; }
 .summary-card.teal strong { color: var(--teal); } .summary-card.ochre strong { color: var(--ochre); } .summary-card.rust strong { color: var(--rust); }
 .toolbar { display: grid; grid-template-columns: minmax(260px, 1fr) 230px 210px; gap: 12px; padding: 14px; background: var(--paper-raised); border: 1px solid var(--line); border-radius: 9px 9px 0 0; }
 .field label { display: block; margin: 0 0 6px; color: var(--ink-soft); font-size: 12px; font-weight: 650; }
-.field input, .field select, .ask-form textarea { width: 100%; min-height: 42px; border: 1px solid var(--line); background: var(--paper); border-radius: 6px; padding: 0 11px; }
+.field input, .field select, .ask-form textarea, .review-box textarea { width: 100%; min-height: 42px; border: 1px solid var(--line); background: var(--paper); border-radius: 6px; padding: 0 11px; }
 .input-shell { position: relative; }
 .input-shell svg { position: absolute; left: 11px; top: 12px; color: var(--ink-faint); }
 .input-shell input { padding-left: 38px; }
@@ -179,6 +179,10 @@ blockquote { margin: 0; font-family: var(--serif); font-size: 14px; }
 .limitation svg { flex: 0 0 auto; color: var(--ochre); }
 .limitation p { margin: 4px 0 0; color: var(--ink-soft); font-size: 12px; }
 .review-box { margin: 18px 0 0; padding: 0; border: 0; }
+.review-box label { display: block; margin-bottom: 6px; color: var(--ink-soft); font-size: 12px; }
+.review-box textarea { display: block; min-height: 72px; resize: vertical; padding: 10px 11px; margin-bottom: 10px; }
+.review-box details { font-size: 12px; line-height: 1.6; }
+#run-history { max-width: 640px; margin-bottom: 20px; }
 .review-box legend, .ask-form label { margin-bottom: 8px; font-weight: 750; }
 .segmented { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
 .segmented button { min-height: 42px; border: 0; border-right: 1px solid var(--line); background: var(--paper-raised); cursor: pointer; font-size: 11px; }

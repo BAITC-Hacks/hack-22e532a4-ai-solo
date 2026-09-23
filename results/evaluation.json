@@ -1,7 +1,7 @@
 {
   "dataset_sha256": "b4a33aba46b1c895488b074c4c1bdabf845736f95ed999b6a7c8615f73904501",
-  "timestamp_utc": "2026-09-23T09:08:09.701998+00:00",
-  "git_revision": "cc47a183d7a80d3374fc2234bcdd63804ac478da",
+  "timestamp_utc": "2026-09-23T09:58:26.522626+00:00",
+  "git_revision": "10fe54469dc7d635ade3a4e48c82765266667f6e",
   "git_dirty": true,
   "mode": "offline",
   "model": "gpt-4.1-mini",
@@ -131,11 +131,11 @@
         "score_min": 0.38
       },
       "actual": {
-        "score": 0.6231,
+        "score": 0.7475,
         "related": true,
         "strong_overlap": false,
         "scope_conflict": false,
-        "before_authority": "исполняет",
+        "before_authority": "контролирует",
         "after_authority": "контролирует"
       },
       "status": "PASS",
@@ -207,7 +207,7 @@
         "related": true,
         "strong_overlap": false,
         "scope_conflict": false,
-        "before_authority": "исполняет",
+        "before_authority": "контролирует",
         "after_authority": "контролирует"
       },
       "status": "PASS",
@@ -226,7 +226,7 @@
         "strong_overlap": false,
         "scope_conflict": false,
         "before_authority": "исполняет",
-        "after_authority": "исполняет"
+        "after_authority": "контролирует"
       },
       "status": "PASS",
       "errors": []
@@ -366,7 +366,7 @@
         "related": true,
         "strong_overlap": false,
         "scope_conflict": false,
-        "before_authority": "исполняет",
+        "before_authority": "контролирует",
         "after_authority": "контролирует"
       },
       "status": "PASS",

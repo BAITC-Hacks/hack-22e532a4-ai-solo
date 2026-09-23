@@ -96,11 +96,14 @@
         <div class="section-heading results-heading">
           <div><p class="step-label">02 · Результаты</p><h2 id="results-title">Карта изменений и оснований</h2></div>
           <div class="report-actions">
+            <button id="new-comparison" class="button button-secondary" type="button">Новое сравнение</button>
             <a id="report-md" class="button button-secondary disabled" href="#" aria-disabled="true">Markdown</a>
             <a id="report-html" class="button button-secondary disabled" href="#" aria-disabled="true">HTML-отчёт</a>
           </div>
         </div>
 
+        <div class="field"><label for="run-history">История запусков</label><select id="run-history"><option value="">Анализ ещё не запускался</option></select></div>
+        <div id="partial-warning" class="inline-alert hidden" role="status">Комплект проанализирован не полностью. Проверьте предупреждения документов; отсутствие вывода не означает отсутствие риска.</div>
         <div id="result-error" class="inline-alert error hidden" role="alert"><span></span><button class="text-button" type="button" id="retry-analysis">Повторить</button></div>
         <div id="empty-state" class="empty-state">
           <div class="empty-dandelion" aria-hidden="true"><span></span><i></i><i></i><i></i><i></i><i></i></div>
@@ -133,11 +136,11 @@
                 <div class="evidence-topline"><span id="detail-type" class="finding-badge"></span><span id="detail-confidence" class="confidence"></span></div>
                 <h3 id="detail-title"></h3><p id="detail-summary" class="detail-summary"></p>
                 <div class="source-pair">
-                  <article class="source-card"><div class="source-label">До</div><p id="before-meta" class="source-meta"></p><blockquote id="before-quote"></blockquote></article>
-                  <article class="source-card after-source"><div class="source-label">После</div><p id="after-meta" class="source-meta"></p><blockquote id="after-quote"></blockquote></article>
+                  <article class="source-card"><div class="source-label" id="before-source-side">До</div><p id="before-meta" class="source-meta"></p><blockquote id="before-quote"></blockquote></article>
+                  <article class="source-card after-source"><div class="source-label" id="after-source-side">После</div><p id="after-meta" class="source-meta"></p><blockquote id="after-quote"></blockquote></article>
                 </div>
                 <div class="limitation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20L12 3Zm0 6v5m0 3v1"/></svg><div><strong>Граница вывода</strong><p id="detail-limit"></p></div></div>
-                <fieldset class="review-box"><legend>Решение сотрудника</legend><div class="segmented" id="review-buttons"><button type="button" data-decision="confirmed">Подтверждено</button><button type="button" data-decision="rejected">Отклонено</button><button type="button" data-decision="review">Проверить</button></div><p id="review-status" class="review-status" aria-live="polite"></p></fieldset>
+                <fieldset class="review-box"><legend>Решение сотрудника</legend><label for="review-note">Комментарий к решению</label><textarea id="review-note" rows="2" maxlength="1000"></textarea><div class="segmented" id="review-buttons"><button type="button" data-decision="confirmed">Подтверждено</button><button type="button" data-decision="rejected">Отклонено</button><button type="button" data-decision="review">Проверить</button></div><p id="review-status" class="review-status" aria-live="polite"></p><details><summary>История решений</summary><ul id="review-history"></ul></details></fieldset>
                 <details class="trace-box"><summary>Журнал выполненных действий <span id="trace-count"></span></summary><ol id="trace-list"></ol></details>
                 <form id="ask-form" class="ask-form"><label for="agent-question">Уточнить у агента</label><textarea id="agent-question" rows="3" placeholder="Например: почему это перенос, а не потеря?" required minlength="3"></textarea><button class="button button-primary" type="submit">Задать вопрос</button><div id="agent-answer" class="agent-answer hidden" aria-live="polite"></div></form>
               </div>

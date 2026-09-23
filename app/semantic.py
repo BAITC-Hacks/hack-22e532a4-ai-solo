@@ -15,6 +15,7 @@ STOP = {
 }
 
 CONCEPT_ROOTS = (
+    (("взаимодейств",), "взаимодейств"),
     (("контрол", "монитор", "надзор", "провер"), "контрол"),
     (("готов", "формир", "составл", "разрабаты"), "формир"),
     (("запраш", "получ", "предостав"), "получ"),
@@ -71,6 +72,7 @@ def _ngrams(text: str, size: int = 3) -> Counter[str]:
     return Counter(compact[index : index + size] for index in range(len(compact) - size + 1))
 
 
+@lru_cache(maxsize=131072)
 def similarity(left: str, right: str) -> float:
     left_tokens, right_tokens = set(tokens(left)), set(tokens(right))
     if not left_tokens or not right_tokens:
@@ -93,7 +95,7 @@ def authority(text: str) -> str:
     lower = text.lower()
     if any(word in lower for word in ("утверждает", "согласовывает", "одобряет")):
         return "утверждает"
-    if any(word in lower for word in ("контролирует", "проверяет", "оценк", "надзор")):
+    if any(word in lower for word in ("контролирует", "контролируют", "проверяет", "проверяют", "оценивает", "оценивают", "оценк", "надзор")):
         return "контролирует"
     if any(word in lower for word in ("консульт", "рекоменд", "предложен")):
         return "консультирует"
@@ -108,18 +110,21 @@ def object_and_scope(text: str, action: str) -> tuple[str, str]:
     object_text = re.split(r"[.;]", tail, maxsplit=1)[0][:260].strip()
     scopes = []
     for marker in ("ИТ", "данн", "операцион", "поддержива", "рисков", "СВК", "аудит", "качества"):
-        if marker.lower() in lower:
+        if (bool(re.search(r'\bит\b', lower)) if marker == 'ИТ' else marker.lower() in lower):
             scopes.append(marker)
     return object_text or text[:220], ", ".join(dict.fromkeys(scopes)) or "общая область"
 
 
 def scope_conflicts(left: str, right: str) -> bool:
     l, r = left.lower(), right.lower()
-    it = ("ит" in l or "данн" in l, "ит" in r or "данн" in r)
+    it = (bool(re.search(r'\bит\b', l)) or "данн" in l, bool(re.search(r'\bит\b', r)) or "данн" in r)
     ops = ("операцион" in l or "поддержива" in l, "операцион" in r or "поддержива" in r)
     return (it[0] and ops[1] and not it[1]) or (it[1] and ops[0] and not it[0])
 
 
 def has_action(text: str) -> bool:
     lower = text.lower()
-    return any(re.search(rf"\b[а-яё]*{root}[а-яё]*\b", lower) for root in ACTION_ROOTS)
+    words = re.findall(r'[а-яё]+', lower)
+    return any(word.startswith(root) for word in words
+               if not word.startswith(('информац', 'организацион', 'контрольн', 'проверочн', 'оценочн', 'подготовлен'))
+               for root in ACTION_ROOTS)

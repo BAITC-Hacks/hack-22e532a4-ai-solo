@@ -9,6 +9,8 @@ from typing import Any
 TYPE_LABELS = {
     "structure_preserved": "Структура: сохранено",
     "structure_added": "Структура: добавлено",
+    "structure_removed": "Структура: не найдено в новом комплекте",
+    "structure_transformed": "Структура: явно указанное преобразование",
     "preserved": "Функция сохранена",
     "changed": "Функция изменена",
     "transferred": "Перенос функции",
@@ -35,14 +37,20 @@ def markdown_report(comparison: dict[str, Any], result: dict[str, Any]) -> str:
     lines = [
         f"# Аналитическое заключение BaqBaq — {comparison['name']}",
         "",
-        f"Сформировано: {datetime.now(timezone.utc).isoformat()}",
+        f"Анализ завершён: {(result.get('run') or {}).get('completed_at') or 'не завершён'}",
         f"Режим модели: **{comparison['model_mode']}**",
         "",
         "> Выводы носят рекомендательный характер и требуют проверки ответственным сотрудником.",
         "",
         "## Сводка",
         "",
+        f"Состояние анализа: {(result.get('run') or {}).get('status', 'не выполнен')}",
+        "",
     ]
+    if (result.get('run') or {}).get('status') == 'partial':
+        lines += ['> НЕПОЛНЫЙ АНАЛИЗ: отсутствие вывода не означает отсутствие риска.', '']
+    for document in result.get('documents', []):
+        lines.append(f"- Комплект {document['side']}: {document['filename']}; SHA-256 {document['sha256']}; {document['status']}")
     if not findings:
         lines += ["Анализ не выполнен или не сформировал проверяемых выводов.", ""]
     else:
@@ -57,14 +65,19 @@ def markdown_report(comparison: dict[str, Any], result: dict[str, Any]) -> str:
                 "",
                 f"- Тип: {TYPE_LABELS.get(item['finding_type'], item['finding_type'])}",
                 f"- Статус доказательств: {item['evidence_status']}",
-                f"- Уверенность алгоритма: {round(item['confidence'] * 100)}%",
+                f"- Оценка алгоритма: {round(item['confidence'] * 100)}/100 (не вероятность)",
                 f"- До: {item.get('before_owner') or '—'} — {item.get('before_function') or '—'}",
                 f"- После: {item.get('after_owner') or '—'} — {item.get('after_function') or '—'}",
                 f"- Источник до: {_source(item.get('before_source'))}",
                 f"- Источник после: {_source(item.get('after_source'))}",
                 f"- Ограничение: {item.get('limitations') or 'Не указано'}",
+                f"- Решение сотрудника: {(item.get('review') or {}).get('decision', 'не проверено')}",
+                f"- Комментарий сотрудника: {(item.get('review') or {}).get('note', '')}",
                 "",
             ]
+            for source in (item.get('before_source'), item.get('after_source')):
+                if source:
+                    lines += [f"- Точная цитата [{source['side']}, {source['id']}]: {source['original_text']}", '']
     lines += [
         "## Ограничения",
         "",

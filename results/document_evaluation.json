@@ -1,0 +1,1262 @@
+{
+  "dataset_sha256": "f90483bb97964815746323616b886c259b08a61efd52a28cde6fac60fc2f40eb",
+  "timestamp_utc": "2026-09-23T09:58:36.425071+00:00",
+  "git_revision": "10fe54469dc7d635ade3a4e48c82765266667f6e",
+  "git_dirty": true,
+  "mode": "offline",
+  "search_mode": "lexical",
+  "live_verification": "NOT TESTED",
+  "passed": 24,
+  "total": 24,
+  "results": [
+    {
+      "id": "structure-01",
+      "category": "structure_roles",
+      "input": {
+        "id": "structure-01",
+        "category": "structure_roles",
+        "before": [
+          "1. Отдел закупок."
+        ],
+        "after": [
+          "1. Отдел закупок."
+        ],
+        "present": [
+          "structure_preserved"
+        ]
+      },
+      "actual": {
+        "insufficient_data": 1,
+        "structure_preserved": 1
+      },
+      "run_status": "partial",
+      "sources": [
+        {
+          "id": "span_6353788290c055b4a749",
+          "document_id": "doc_4a8a294b975d5f65b6b4",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 1",
+          "clause_label": "1",
+          "original_text": "1. Отдел закупок."
+        },
+        {
+          "id": "span_969dc4ad7f6a55a09811",
+          "document_id": "doc_2c2951439a595f4ba9c4",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 1",
+          "clause_label": "1",
+          "original_text": "1. Отдел закупок."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "structure-02",
+      "category": "structure_roles",
+      "input": {
+        "id": "structure-02",
+        "category": "structure_roles",
+        "before": [
+          "1. Отдел закупок."
+        ],
+        "after": [
+          "1. Отдел закупок.",
+          "2. Отдел обучения."
+        ],
+        "present": [
+          "structure_added"
+        ]
+      },
+      "actual": {
+        "insufficient_data": 1,
+        "structure_preserved": 1,
+        "structure_added": 1
+      },
+      "run_status": "partial",
+      "sources": [
+        {
+          "id": "span_7dc1129e19275c2fa46c",
+          "document_id": "doc_8679c13354ef502a92e8",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 1",
+          "clause_label": "1",
+          "original_text": "1. Отдел закупок."
+        },
+        {
+          "id": "span_31bbb08b20a85c9daae3",
+          "document_id": "doc_e92cf2ee6e6f5b8c9bd9",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 1",
+          "clause_label": "1",
+          "original_text": "1. Отдел закупок."
+        },
+        {
+          "id": "span_c2c0124bc2a15127b925",
+          "document_id": "doc_e92cf2ee6e6f5b8c9bd9",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2",
+          "original_text": "2. Отдел обучения."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "structure-03",
+      "category": "structure_roles",
+      "input": {
+        "id": "structure-03",
+        "category": "structure_roles",
+        "before": [
+          "1. Отдел закупок.",
+          "2. Отдел обучения."
+        ],
+        "after": [
+          "1. Отдел закупок."
+        ],
+        "present": [
+          "structure_removed"
+        ]
+      },
+      "actual": {
+        "insufficient_data": 1,
+        "structure_preserved": 1,
+        "structure_removed": 1
+      },
+      "run_status": "partial",
+      "sources": [
+        {
+          "id": "span_1f467055563e5d4b9af4",
+          "document_id": "doc_2ba10bb7f3ff502c909a",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 1",
+          "clause_label": "1",
+          "original_text": "1. Отдел закупок."
+        },
+        {
+          "id": "span_85872d940c7e5147b561",
+          "document_id": "doc_daf7a7c22acc5ea7b846",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 1",
+          "clause_label": "1",
+          "original_text": "1. Отдел закупок."
+        },
+        {
+          "id": "span_90855685203b5e00be70",
+          "document_id": "doc_2ba10bb7f3ff502c909a",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2",
+          "original_text": "2. Отдел обучения."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "structure-04",
+      "category": "structure_roles",
+      "input": {
+        "id": "structure-04",
+        "category": "structure_roles",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "preserved"
+        ],
+        "owner": "Директор закупок"
+      },
+      "actual": {
+        "preserved": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_dd90d0f79f9e59859309",
+          "document_id": "doc_cacb737f8bfe59c39bbb",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_7d6192fa3ef75d16aa5a",
+          "document_id": "doc_a645e5d3e1925c3394fd",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "match-01",
+      "category": "function_matching",
+      "input": {
+        "id": "match-01",
+        "category": "function_matching",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "7. Директор закупок:",
+          "7.1. Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "preserved"
+        ],
+        "absent": [
+          "potential_loss"
+        ]
+      },
+      "actual": {
+        "preserved": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_2753ce1e24fc5579b0a2",
+          "document_id": "doc_53e9602d0280584ba2ea",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_d879123aa52b51c9bd0f",
+          "document_id": "doc_66eb1dc279e755eeb565",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "7.1",
+          "original_text": "7.1. Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "match-02",
+      "category": "function_matching",
+      "input": {
+        "id": "match-02",
+        "category": "function_matching",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "7. Директор контроля:",
+          "7.1. Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "transferred"
+        ],
+        "absent": [
+          "potential_loss"
+        ]
+      },
+      "actual": {
+        "transferred": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_0f0942075c535fdaba98",
+          "document_id": "doc_4ab84f6fbef55645bd16",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_557d6d90dcb65faea0b0",
+          "document_id": "doc_e91550a90c825f7b8b71",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "7.1",
+          "original_text": "7.1. Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "match-03",
+      "category": "function_matching",
+      "input": {
+        "id": "match-03",
+        "category": "function_matching",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует выполнение рекомендаций по итогам проверок."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Осуществляет мониторинг исполнения рекомендаций."
+        ],
+        "present": [
+          "changed"
+        ]
+      },
+      "actual": {
+        "changed": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_431fa719bf31503e9150",
+          "document_id": "doc_df8f110364b15adc8ecc",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует выполнение рекомендаций по итогам проверок."
+        },
+        {
+          "id": "span_804d74fa628b58a4902e",
+          "document_id": "doc_66e2ec50d107505ba5cd",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Осуществляет мониторинг исполнения рекомендаций."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "match-04",
+      "category": "function_matching",
+      "input": {
+        "id": "match-04",
+        "category": "function_matching",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует закупки оборудования и обучение сотрудников."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Контролирует закупки оборудования.",
+          "2.2. Контролирует обучение сотрудников."
+        ],
+        "present": [
+          "split"
+        ]
+      },
+      "actual": {
+        "split": 2
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_2219be50e99f51e8bf41",
+          "document_id": "doc_a04f4a2265a1529bab89",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует закупки оборудования и обучение сотрудников."
+        },
+        {
+          "id": "span_5f6eb2ea087556f58932",
+          "document_id": "doc_2710ba58a9e25872a980",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует закупки оборудования."
+        },
+        {
+          "id": "span_3ce9d9fb1ba552318816",
+          "document_id": "doc_2710ba58a9e25872a980",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 3",
+          "clause_label": "2.2",
+          "original_text": "2.2. Контролирует обучение сотрудников."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "match-05",
+      "category": "function_matching",
+      "input": {
+        "id": "match-05",
+        "category": "function_matching",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует закупки оборудования.",
+          "2.2. Контролирует обучение сотрудников."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Контролирует закупки оборудования и обучение сотрудников."
+        ],
+        "present": [
+          "merged"
+        ]
+      },
+      "actual": {
+        "merged": 2
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_1398924d1d815e438051",
+          "document_id": "doc_6b7ea0b776b75d52ae73",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует закупки оборудования."
+        },
+        {
+          "id": "span_ef8565a20c55531fb0fb",
+          "document_id": "doc_4a942bb10b0b5632b354",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует закупки оборудования и обучение сотрудников."
+        },
+        {
+          "id": "span_f3d4376cb2845d808b32",
+          "document_id": "doc_6b7ea0b776b75d52ae73",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 3",
+          "clause_label": "2.2",
+          "original_text": "2.2. Контролирует обучение сотрудников."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "match-06",
+      "category": "function_matching",
+      "input": {
+        "id": "match-06",
+        "category": "function_matching",
+        "before": [
+          "Директор закупок:",
+          "Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "Директор контроля:",
+          "Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "transferred"
+        ]
+      },
+      "actual": {
+        "transferred": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_8f654d5f693d557b953d",
+          "document_id": "doc_9d47c4e7d0de579e8ebc",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_070118d575295c49aa1f",
+          "document_id": "doc_fd5a00ec7536593f82dd",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "loss-01",
+      "category": "loss_coverage",
+      "input": {
+        "id": "loss-01",
+        "category": "loss_coverage",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Проверяет соблюдение стандартов информационной безопасности."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Формирует график отпусков персонала."
+        ],
+        "present": [
+          "potential_loss"
+        ]
+      },
+      "actual": {
+        "potential_loss": 1,
+        "new": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_e6391c9f644d5ff894e2",
+          "document_id": "doc_92dd4ef09ee250ba9666",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Проверяет соблюдение стандартов информационной безопасности."
+        },
+        {
+          "id": "span_857ca4ec4fd75b8d825e",
+          "document_id": "doc_230f425d0fd953b4b0ba",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Формирует график отпусков персонала."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "loss-02",
+      "category": "loss_coverage",
+      "input": {
+        "id": "loss-02",
+        "category": "loss_coverage",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "8. Директор контроля:",
+          "8.1. Контролирует качество закупочной деятельности."
+        ],
+        "absent": [
+          "potential_loss"
+        ],
+        "present": [
+          "transferred"
+        ]
+      },
+      "actual": {
+        "transferred": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_19751661faa55e35b2ae",
+          "document_id": "doc_9c0bd7eb96a751a8a5cc",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_cdeed1786bca5927809d",
+          "document_id": "doc_99ab13cc26775ab58f07",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "8.1",
+          "original_text": "8.1. Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "loss-03",
+      "category": "loss_coverage",
+      "input": {
+        "id": "loss-03",
+        "category": "loss_coverage",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Проверяет соблюдение стандартов информационной безопасности."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Формирует график отпусков персонала."
+        ],
+        "blank_pdf": true,
+        "status": "partial",
+        "present": [
+          "insufficient_data"
+        ],
+        "absent": [
+          "potential_loss"
+        ]
+      },
+      "actual": {
+        "insufficient_data": 2,
+        "new": 1
+      },
+      "run_status": "partial",
+      "sources": [
+        {
+          "id": "span_db9e06e942de58cf8827",
+          "document_id": "doc_ecfbcc357a2c52678b45",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Проверяет соблюдение стандартов информационной безопасности."
+        },
+        {
+          "id": "span_def0078eecc25f548838",
+          "document_id": "doc_18cffd3f63555420a7c0",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Формирует график отпусков персонала."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "loss-04",
+      "category": "loss_coverage",
+      "input": {
+        "id": "loss-04",
+        "category": "loss_coverage",
+        "before": [
+          "Информационный документ."
+        ],
+        "after": [
+          "Информационный документ."
+        ],
+        "status": "partial",
+        "present": [
+          "insufficient_data"
+        ]
+      },
+      "actual": {
+        "insufficient_data": 1
+      },
+      "run_status": "partial",
+      "sources": [],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "duplicate-01",
+      "category": "duplication",
+      "input": {
+        "id": "duplicate-01",
+        "category": "duplication",
+        "before": [
+          "Директор закупок:",
+          "Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности.",
+          "3. Директор контроля:",
+          "3.1. Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "possible_duplicate"
+        ]
+      },
+      "actual": {
+        "preserved": 1,
+        "new": 1,
+        "possible_duplicate": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_72b1a9fb604b5fd58307",
+          "document_id": "doc_75c3c068099d5ff0a553",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_3feab59026945be3a152",
+          "document_id": "doc_4e77e4816e4350f0af8b",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_35ce90bb98c8548baa93",
+          "document_id": "doc_4e77e4816e4350f0af8b",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 4",
+          "clause_label": "3.1",
+          "original_text": "3.1. Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "duplicate-02",
+      "category": "duplication",
+      "input": {
+        "id": "duplicate-02",
+        "category": "duplication",
+        "before": [
+          "Директор закупок:",
+          "Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "Директор закупок:",
+          "Контролирует качество закупочной деятельности.",
+          "Контролирует качество закупочной деятельности."
+        ],
+        "absent": [
+          "possible_duplicate"
+        ]
+      },
+      "actual": {
+        "preserved": 1,
+        "new": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_337c3d4f8c955a5198f7",
+          "document_id": "doc_901b837759a65be9bfa6",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_bf6f30cb1b465c828102",
+          "document_id": "doc_0091bdaf823751eba6a1",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_806600d2c63c5259b1f5",
+          "document_id": "doc_0091bdaf823751eba6a1",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 3",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "duplicate-03",
+      "category": "duplication",
+      "input": {
+        "id": "duplicate-03",
+        "category": "duplication",
+        "before": [
+          "Директор аудита:",
+          "Организует аудит информационных систем и данных."
+        ],
+        "after": [
+          "2. Директор ИТ:",
+          "2.1. Организует аудит информационных систем и данных.",
+          "3. Директор операций:",
+          "3.1. Организует аудит операционных и поддерживающих процессов."
+        ],
+        "absent": [
+          "possible_duplicate"
+        ]
+      },
+      "actual": {
+        "transferred": 1,
+        "new": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_edc59c9776e25692996a",
+          "document_id": "doc_d24d0dc472455af69118",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Организует аудит информационных систем и данных."
+        },
+        {
+          "id": "span_68ed4d0bef115dfd8845",
+          "document_id": "doc_0250207862db5c7e8ef9",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Организует аудит информационных систем и данных."
+        },
+        {
+          "id": "span_ae05334abdcd519d91f4",
+          "document_id": "doc_0250207862db5c7e8ef9",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 4",
+          "clause_label": "3.1",
+          "original_text": "3.1. Организует аудит операционных и поддерживающих процессов."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "duplicate-04",
+      "category": "duplication",
+      "input": {
+        "id": "duplicate-04",
+        "category": "duplication",
+        "before": [
+          "Директор закупок:",
+          "Организует работу подразделения."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Организует работу подразделения.",
+          "3. Директор обучения:",
+          "3.1. Организует работу подразделения."
+        ],
+        "absent": [
+          "possible_duplicate"
+        ]
+      },
+      "actual": {
+        "preserved": 1,
+        "new": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_fe37352ce96e5f9f8689",
+          "document_id": "doc_fde636c02cf757ad8d54",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Организует работу подразделения."
+        },
+        {
+          "id": "span_0d79df7b6cbc536c88ce",
+          "document_id": "doc_30b507b357dc5f7f8bf3",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Организует работу подразделения."
+        },
+        {
+          "id": "span_0e8dfe8cf39a585bb35a",
+          "document_id": "doc_30b507b357dc5f7f8bf3",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 4",
+          "clause_label": "3.1",
+          "original_text": "3.1. Организует работу подразделения."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "conflict-01",
+      "category": "conflict_interest",
+      "input": {
+        "id": "conflict-01",
+        "category": "conflict_interest",
+        "before": [
+          "Директор закупок:",
+          "Проводит проверку качества закупочной деятельности."
+        ],
+        "after": [
+          "Директор закупок:",
+          "Проводит проверку качества закупочной деятельности.",
+          "Утверждает результаты проверки качества закупочной деятельности."
+        ],
+        "present": [
+          "potential_conflict"
+        ]
+      },
+      "actual": {
+        "preserved": 1,
+        "new": 1,
+        "potential_conflict": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_19bc2796eaf35fba809d",
+          "document_id": "doc_36557a82125f5cd88d2f",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Проводит проверку качества закупочной деятельности."
+        },
+        {
+          "id": "span_ea68944035fe5724950d",
+          "document_id": "doc_ac0d7f2f473d5dc38d7b",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Проводит проверку качества закупочной деятельности."
+        },
+        {
+          "id": "span_8438ca9e94f15627b161",
+          "document_id": "doc_ac0d7f2f473d5dc38d7b",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 3",
+          "clause_label": null,
+          "original_text": "Утверждает результаты проверки качества закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "conflict-02",
+      "category": "conflict_interest",
+      "input": {
+        "id": "conflict-02",
+        "category": "conflict_interest",
+        "before": [
+          "Директор закупок:",
+          "Проводит проверку качества закупочной деятельности."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Проводит проверку качества закупочной деятельности.",
+          "3. Главный аудитор:",
+          "3.1. Утверждает результаты проверки качества закупочной деятельности."
+        ],
+        "absent": [
+          "potential_conflict",
+          "possible_duplicate"
+        ]
+      },
+      "actual": {
+        "preserved": 1,
+        "new": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_0ed600e8c8755021b920",
+          "document_id": "doc_ecdc596563a359a780a9",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Проводит проверку качества закупочной деятельности."
+        },
+        {
+          "id": "span_b0968a154eff5f04bbab",
+          "document_id": "doc_70a5df7549985a68aad9",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Проводит проверку качества закупочной деятельности."
+        },
+        {
+          "id": "span_caa07e174a3a5e0da8d4",
+          "document_id": "doc_70a5df7549985a68aad9",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 4",
+          "clause_label": "3.1",
+          "original_text": "3.1. Утверждает результаты проверки качества закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "source-01",
+      "category": "versions_citations",
+      "input": {
+        "id": "source-01",
+        "category": "versions_citations",
+        "before": [
+          "Директор закупок:",
+          "Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "Директор закупок:",
+          "Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "preserved"
+        ],
+        "review": true
+      },
+      "actual": {
+        "preserved": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_6ad6a1896da05c3f8a4e",
+          "document_id": "doc_3ddb817346cd568dbbc7",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_cb54734f1c55575490fa",
+          "document_id": "doc_9aabf63ef6205d9b8323",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": null,
+          "original_text": "Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "source-02",
+      "category": "versions_citations",
+      "input": {
+        "id": "source-02",
+        "category": "versions_citations",
+        "format": "xlsx",
+        "before": [
+          "Подразделение | Функция",
+          "Отдел закупок | Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "Подразделение | Функция",
+          "Отдел закупок | Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "preserved"
+        ]
+      },
+      "actual": {
+        "preserved": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_bbd3ee0f6e9559efad6a",
+          "document_id": "doc_e7a2f74d3fc75a009228",
+          "side": "before",
+          "filename": "synthetic_revision_8.xlsx",
+          "revision": "версия не указана",
+          "locator": "лист Функции, A2:B2",
+          "clause_label": null,
+          "original_text": "Отдел закупок | Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_9e411c28f36f51538342",
+          "document_id": "doc_928329a8bf34517d8d3e",
+          "side": "after",
+          "filename": "synthetic_revision_9.xlsx",
+          "revision": "версия не указана",
+          "locator": "лист Функции, A2:B2",
+          "clause_label": null,
+          "original_text": "Отдел закупок | Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "source-03",
+      "category": "versions_citations",
+      "input": {
+        "id": "source-03",
+        "category": "versions_citations",
+        "format": "pdf",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "preserved"
+        ]
+      },
+      "actual": {
+        "preserved": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_80616eb5740d55fe87ca",
+          "document_id": "doc_ab46d34be7bc5a4d8782",
+          "side": "before",
+          "filename": "synthetic_revision_8.pdf",
+          "revision": "версия не указана",
+          "locator": "страница 1, фрагмент 1",
+          "clause_label": "2",
+          "original_text": "2. Директор закупок: 2.1. Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_64f6022e61d652f4b219",
+          "document_id": "doc_94f4c15bac0f5bbfb70f",
+          "side": "after",
+          "filename": "synthetic_revision_9.pdf",
+          "revision": "версия не указана",
+          "locator": "страница 1, фрагмент 1",
+          "clause_label": "2",
+          "original_text": "2. Директор закупок: 2.1. Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "id": "source-04",
+      "category": "versions_citations",
+      "input": {
+        "id": "source-04",
+        "category": "versions_citations",
+        "before": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "after": [
+          "2. Директор закупок:",
+          "2.1. Контролирует качество закупочной деятельности."
+        ],
+        "present": [
+          "preserved"
+        ],
+        "history": true
+      },
+      "actual": {
+        "preserved": 1
+      },
+      "run_status": "completed",
+      "sources": [
+        {
+          "id": "span_bbdb23f5164d5fe6bcb5",
+          "document_id": "doc_be7f1d278f1f5a098747",
+          "side": "before",
+          "filename": "synthetic_revision_8.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        },
+        {
+          "id": "span_aca9ca9b0a7a561aa2e4",
+          "document_id": "doc_fa096e6bb2b65e77bd8f",
+          "side": "after",
+          "filename": "synthetic_revision_9.docx",
+          "revision": "версия не указана",
+          "locator": "абзац 2",
+          "clause_label": "2.1",
+          "original_text": "2.1. Контролирует качество закупочной деятельности."
+        }
+      ],
+      "errors": [],
+      "status": "PASS"
+    }
+  ]
+}

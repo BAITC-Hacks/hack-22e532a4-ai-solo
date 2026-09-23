@@ -1,0 +1,30 @@
+{
+  "mode": "offline",
+  "search_mode": "fastembed",
+  "elapsed_seconds": 68.58,
+  "summary": {
+    "structure_preserved": 2,
+    "structure_added": 2,
+    "preserved": 348,
+    "changed": 11,
+    "potential_loss": 2,
+    "transferred": 30,
+    "merged": 16,
+    "split": 8,
+    "new": 26,
+    "possible_duplicate": 7
+  },
+  "anchors": {
+    "5.4.4 -> 5.3.3": [
+      "transferred"
+    ],
+    "9.37 -> 9.37": [
+      "changed"
+    ],
+    "12.1.4 -> 12.1.4": [
+      "changed"
+    ]
+  },
+  "passed": true,
+  "note": "Development regression anchors, not a complete independent annotation."
+}

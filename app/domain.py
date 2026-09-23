@@ -58,6 +58,8 @@ class CandidateMatch:
 BUSINESS_TYPES = {
     "structure_preserved",
     "structure_added",
+    "structure_removed",
+    "structure_transformed",
     "preserved",
     "changed",
     "transferred",

@@ -10,6 +10,8 @@ const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const typeLabels = {
   structure_preserved: "Структура · сохранено", structure_added: "Структура · добавлено",
+  structure_removed: 'Структура · не найдено',
+  structure_transformed: 'Структура · преобразование',
   preserved: "Сохранено", changed: "Изменено", transferred: "Перенос", split: "Разделение",
   merged: "Объединение", new: "Новое", potential_loss: "Потенциальная потеря",
   possible_duplicate: "Возможное дублирование", potential_conflict: "Потенциальный конфликт",
@@ -59,6 +61,11 @@ async function ensureComparison() {
 
 async function refreshComparison() {
   state.comparison = await api(`/api/comparisons/${state.comparisonId}`);
+  if (state.health) {
+    const actualMode = state.comparison.model_mode;
+    const text = (actualMode === 'live' ? `Live · ${state.health.model}` : 'Offline') + (state.health.search_mode === 'fastembed' ? ' · embeddings' : ' · лексический поиск');
+    $('#mode-badge').innerHTML = `<span class="status-dot"></span><span class="mode-long">${escapeHtml(text)}</span><span class="mode-short">${actualMode === 'live' ? 'Live' : 'Offline'}</span>`;
+  }
   renderDocuments();
 }
 
@@ -71,7 +78,7 @@ function renderDocuments() {
       <div class="document-item">
         <span class="file-type">${escapeHtml(doc.file_type)}</span>
         <span class="document-name"><strong title="${escapeHtml(doc.filename)}">${escapeHtml(doc.filename)}</strong><small>${escapeHtml(doc.revision)} · ${doc.span_count} фрагм.</small></span>
-        <span class="doc-status ${doc.status === "ready" ? "" : "attention"}">${doc.status === "ready" ? "Готов" : "Проверить"}</span>
+        <span class="doc-status ${doc.status === "ready" && !doc.warnings?.length ? "" : "attention"}" title="${escapeHtml((doc.warnings || []).join('; '))}">${doc.status === "ready" && !doc.warnings?.length ? "Готов" : "Проверить"}</span>
       </div>`).join("");
   }
   const beforeReady = state.comparison?.documents?.some((doc) => doc.side === "before" && doc.status === "ready");
@@ -112,9 +119,9 @@ async function loadDemo() {
   clearError("#upload-error");
   setBusy(true, "Читаем контрольные редакции 8 и 9…");
   try {
-    await api(`/api/comparisons/${state.comparisonId}/demo`, { method: "POST" });
+    const loaded = await api(`/api/comparisons/${state.comparisonId}/demo`, { method: "POST" });
     await refreshComparison();
-    toast("Контрольная пара загружена через обычный parser pipeline");
+    toast(loaded.dataset === 'synthetic' ? 'Загружен синтетический пример; оригиналы не подключены' : 'Контрольные редакции загружены');
   } catch (error) { showError("#upload-error", error.message); }
   finally { setBusy(false); }
 }
@@ -124,14 +131,19 @@ async function analyze() {
   setBusy(true, "Строим реестр структуры и атомарных функций…");
   $("#empty-state").classList.add("hidden");
   $("#results-content").classList.add("hidden");
-  const stages = ["Сопоставляем функции по смыслу…", "Проверяем покрытие и возможные пересечения…", "Разрешаем ссылки на точные источники…"];
-  let stage = 0;
-  const timer = window.setInterval(() => { $("#progress-text").textContent = stages[Math.min(stage++, stages.length - 1)]; }, 1800);
+  const stageNames = {extract_registry:'Извлечён реестр', prepare_search_index:'Подготовлен поиск', compare_functions:'Найдены соответствия', check_coverage:'Проверено покрытие', check_overlap_and_independence:'Проверены пересечения', resolve_sources:'Проверены ссылки', model_extract_functions:'Модель извлекла функции', model_match_functions:'Модель сопоставила функции', model_review:'Завершена проверка модели'};
+  const timer = window.setInterval(async () => {
+    try {
+      const progress = await api(`/api/comparisons/${state.comparisonId}/progress`);
+      if (state.busy && progress.last_completed_tool) $("#progress-text").textContent = `${stageNames[progress.last_completed_tool] || progress.last_completed_tool}. Анализ продолжается…`;
+    } catch { /* Progress failure does not replace the analysis response. */ }
+  }, 1800);
   try {
     state.result = await api(`/api/comparisons/${state.comparisonId}/analyze`, { method: "POST" });
+    await refreshRuns();
     renderResult();
     $("#results-section").scrollIntoView({ behavior: "smooth", block: "start" });
-    toast("Анализ завершён, источники проверены");
+    toast(state.result.run.status === 'partial' ? 'Анализ неполный: проверьте источники и предупреждения' : 'Анализ завершён, источники проверены');
   } catch (error) {
     const box = $("#result-error");
     box.querySelector("span").textContent = error.message;
@@ -148,9 +160,13 @@ function badgeClass(type) {
 
 function renderResult() {
   const findings = state.result?.findings || [];
+  $('#partial-warning').classList.toggle('hidden', state.result?.run?.status !== 'partial');
   $("#empty-state").classList.toggle("hidden", findings.length > 0);
   $("#results-content").classList.toggle("hidden", findings.length === 0);
-  if (!findings.length) return;
+  if (!findings.length) {
+    for (const id of ['#report-md','#report-html']) { $(id).classList.add('disabled'); $(id).setAttribute('aria-disabled','true'); $(id).href='#'; }
+    return;
+  }
   const counts = state.result.summary || {};
   const risks = (counts.potential_loss || 0) + (counts.possible_duplicate || 0) + (counts.potential_conflict || 0);
   const matched = (counts.preserved || 0) + (counts.transferred || 0) + (counts.changed || 0) + (counts.split || 0);
@@ -162,8 +178,8 @@ function renderResult() {
     <article class="summary-card rust"><span>Индикаторов риска</span><strong>${risks}</strong></article>`;
   $("#report-md").classList.remove("disabled"); $("#report-md").setAttribute("aria-disabled", "false");
   $("#report-html").classList.remove("disabled"); $("#report-html").setAttribute("aria-disabled", "false");
-  $("#report-md").href = `/api/comparisons/${state.comparisonId}/report?format=markdown`;
-  $("#report-html").href = `/api/comparisons/${state.comparisonId}/report?format=html`;
+  $("#report-md").href = `/api/comparisons/${state.comparisonId}/report?format=markdown&run_id=${state.result.run.id}`;
+  $("#report-html").href = `/api/comparisons/${state.comparisonId}/report?format=html&run_id=${state.result.run.id}`;
   renderFindings();
   const params = new URLSearchParams(location.search);
   const selected = params.get("finding");
@@ -174,7 +190,7 @@ function renderResult() {
 function typeFilterMatch(item, filter) {
   const type = item.finding_type;
   if (!filter) return true;
-  if (filter === "focus") return ["structure_added", "changed", "split", "merged", "potential_loss", "possible_duplicate", "potential_conflict", "new"].includes(type) || (type === "transferred" && item.confidence < .75);
+  if (filter === "focus") return ["structure_added", "structure_transformed", "structure_removed", "insufficient_data", "changed", "split", "merged", "potential_loss", "possible_duplicate", "potential_conflict", "new"].includes(type) || (type === "transferred" && item.confidence < .75);
   if (filter === "attention") return !["preserved", "structure_preserved"].includes(type);
   if (filter === "structure") return type.startsWith("structure_");
   if (filter === "changed") return ["changed", "split", "merged"].includes(type);
@@ -213,15 +229,19 @@ function selectFinding(id, updateUrl = true) {
   $("#evidence-content").classList.remove("hidden");
   $("#detail-type").textContent = typeLabels[item.finding_type] || item.finding_type;
   $("#detail-type").className = `finding-badge ${badgeClass(item.finding_type)}`;
-  $("#detail-confidence").textContent = `${Math.round(item.confidence * 100)}% уверенности`;
+  $("#detail-confidence").textContent = `Оценка алгоритма: ${Math.round(item.confidence * 100)}/100`;
   $("#detail-title").textContent = item.title;
   $("#detail-summary").textContent = item.summary;
   $("#before-meta").textContent = sourceMeta(item.before_source);
   $("#after-meta").textContent = sourceMeta(item.after_source);
+  $('#before-source-side').textContent = item.before_source?.side === 'after' ? 'После · первый источник' : 'До';
+  $('#after-source-side').textContent = item.after_source?.side === 'before' ? 'До · второй источник' : 'После';
   $("#before-quote").textContent = item.before_source?.original_text || "Для новой функции источник на стороне «До» отсутствует.";
   $("#after-quote").textContent = item.after_source?.original_text || "Эквивалентный фрагмент в загруженном комплекте «После» не найден.";
   $("#detail-limit").textContent = item.limitations;
   $("#review-status").textContent = item.review ? `Последнее решение: ${decisionLabel(item.review.decision)}` : "Решение ещё не зафиксировано";
+  $('#review-note').value = item.review?.note || '';
+  $('#review-history').innerHTML = (item.review_history || []).map(review => `<li>${escapeHtml(new Date(review.created_at).toLocaleString('ru-RU'))} · ${escapeHtml(decisionLabel(review.decision))} · ${escapeHtml(review.note)}</li>`).join('');
   $$("#review-buttons button").forEach((button) => button.classList.toggle("active", item.review?.decision === button.dataset.decision));
   $("#trace-count").textContent = `(${state.result.trace.length})`;
   $("#trace-list").innerHTML = state.result.trace.map((event) => `<li><strong>${escapeHtml(event.tool)}</strong> · ${event.duration_ms} мс<code>${escapeHtml(event.result)}</code></li>`).join("");
@@ -235,8 +255,9 @@ function decisionLabel(value) { return ({ confirmed: "подтверждено",
 async function saveReview(decision) {
   if (!state.selectedId) return;
   try {
-    const review = await api(`/api/findings/${state.selectedId}/review`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ decision, note: "" }) });
+    const review = await api(`/api/findings/${state.selectedId}/review`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ decision, note: $('#review-note').value }) });
     const item = state.result.findings.find((f) => f.id === state.selectedId); item.review = review;
+    item.review_history = [...(item.review_history || []), review];
     selectFinding(state.selectedId, false); toast("Решение сохранено отдельно от машинного вывода");
   } catch (error) { $("#review-status").textContent = error.message; }
 }
@@ -248,13 +269,25 @@ async function askAgent(event) {
   const button = event.currentTarget.querySelector("button[type=submit]");
   button.disabled = true; button.setAttribute("aria-busy", "true"); button.textContent = "Ищем основания…";
   try {
-    const message = await api(`/api/comparisons/${state.comparisonId}/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, finding_id: state.selectedId }) });
-    const answer = $("#agent-answer"); answer.textContent = message.answer; answer.classList.remove("hidden");
+    const message = await api(`/api/comparisons/${state.comparisonId}/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, finding_id: state.selectedId, run_id: state.result?.run?.id }) });
+    const answer = $("#agent-answer"); answer.textContent = message.answer + '\n\nЖурнал: ' + (message.trace || []).map(x => `${x.tool} · ${x.status} · ${x.duration_ms} мс`).join('; '); answer.classList.remove("hidden");
   } catch (error) { const answer = $("#agent-answer"); answer.textContent = error.message; answer.classList.remove("hidden"); }
   finally { button.disabled = false; button.removeAttribute("aria-busy"); button.textContent = "Задать вопрос"; }
 }
 
 function wireEvents() {
+  $('#new-comparison').addEventListener('click', async () => {
+    if (state.busy) return;
+    localStorage.removeItem('baqbaq-comparison');
+    state.comparisonId = null; state.result = null; state.selectedId = null;
+    await ensureComparison(); await refreshComparison(); await refreshRuns(); renderResult();
+    $('#evidence-content').classList.add('hidden'); $('#evidence-placeholder').classList.remove('hidden');
+  });
+  $('#run-history').addEventListener('change', async (event) => {
+    if (!event.target.value || state.busy) return;
+    state.result = await api(`/api/comparisons/${state.comparisonId}/result?run_id=${encodeURIComponent(event.target.value)}`);
+    renderResult();
+  });
   $("#before-files").addEventListener("change", (event) => upload("before", event.target.files));
   $("#after-files").addEventListener("change", (event) => upload("after", event.target.files));
   $("#demo-button").addEventListener("click", loadDemo);
@@ -279,14 +312,21 @@ async function init() {
   wireEvents();
   try {
     const health = await api("/api/health");
-    const modeLong = health.model_mode === "live" ? `Live · ${escapeHtml(health.model)}` : "Offline · локальный анализ";
+    state.health = health;
+    const modeLong = (health.model_mode === "live" ? `Live · ${escapeHtml(health.model)}` : "Offline") + (health.search_mode === 'fastembed' ? ' · embeddings' : ' · лексический поиск');
     const modeShort = health.model_mode === "live" ? "Live" : "Offline";
     $("#mode-badge").innerHTML = `<span class="status-dot"></span><span class="mode-long">${modeLong}</span><span class="mode-short">${modeShort}</span>`;
     await ensureComparison();
     await refreshComparison();
+    await refreshRuns();
     const current = await api(`/api/comparisons/${state.comparisonId}/result`);
-    if (current?.run?.status === "completed") { state.result = current; renderResult(); }
+    if (['completed','partial'].includes(current?.run?.status)) { state.result = current; renderResult(); }
   } catch (error) { showError("#upload-error", `Не удалось запустить рабочее место: ${error.message}`); }
+}
+
+async function refreshRuns() {
+  const runs = await api(`/api/comparisons/${state.comparisonId}/runs`);
+  $('#run-history').innerHTML = runs.length ? runs.map(run => `<option value="${escapeHtml(run.id)}">${escapeHtml(new Date(run.started_at).toLocaleString('ru-RU'))} · ${escapeHtml(run.status)} · ${escapeHtml(run.model_mode)}</option>`).join('') : '<option value="">Анализ ещё не запускался</option>';
 }
 
 init();

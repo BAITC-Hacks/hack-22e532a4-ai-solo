@@ -10,128 +10,24 @@ from typing import Any, Callable
 from .db import Store, stable_id
 from .domain import CandidateMatch, FunctionAssertion
 from .model_adapter import ModelAdapter, ModelError
-from .semantic import authority, best_action, has_action, object_and_scope, scope_conflicts, similarity
+from .semantic import authority, best_action, has_action, object_and_scope, scope_conflicts, similarity, tokens
 
 
-LEADING_OWNER_RE = re.compile(
-    r"^(?P<owner>Главный аудитор|Директор(?:а|ы)?\s+.{1,190}?|Руководител(?:ь|и)\s+.{1,160}?)"
-    r"(?=\s*:\s*$|\s+(?:обязан|обязаны|организует|организуют|осуществляет|осуществляют|"
-    r"обеспечивает|обеспечивают|готовит|готовят|запрашивает|запрашивают|участвует|участвуют|"
-    r"анализирует|анализируют|взаимодействует|взаимодействуют|проводит|проводят)\b)",
-    re.IGNORECASE,
-)
-UNIT_RE = re.compile(r"(Департамент[^.;|]{3,160}?)(?:\s*\(([А-ЯA-ZЁ]{2,12})\))?(?:[.;]|$)", re.IGNORECASE)
-CLAUSE_PREFIX_RE = re.compile(r"^\s*(?:\d+\.)+\s*")
-
-
-def _clean_owner(text: str) -> str:
-    text = CLAUSE_PREFIX_RE.sub("", text).strip(" :;.")
-    return text[:220] or "Не установлен"
-
-
-def _section(label: str | None) -> str | None:
-    if not label:
-        return None
-    bits = label.split(".")
-    return ".".join(bits[:2]) if len(bits) >= 2 else bits[0]
-
-
-def extract_units_and_functions(
-    store: Store, comparison_id: str, side: str
-) -> tuple[list[dict[str, Any]], list[FunctionAssertion], list[dict[str, Any]]]:
-    spans = store.get_spans(comparison_id, side)
-    units: list[dict[str, Any]] = []
-    functions: list[FunctionAssertion] = []
-    roles: list[dict[str, Any]] = []
-    owner_by_section: dict[str, str] = {}
-    current_owner = "Не установлен"
-    current_main: str | None = None
-    current_document: str | None = None
-    active_structure = False
-
-    for span in spans:
-        if span["document_id"] != current_document:
-            current_document = span["document_id"]
-            current_owner = "Не установлен"
-            current_main = None
-        label = span.get("clause_label")
-        text = span["original_text"].strip()
-        if label:
-            current_main = label.split(".", 1)[0]
-        if label == "3.4":
-            active_structure = True
-        elif label and label.startswith("3.") and label != "3.4":
-            try:
-                active_structure = float(label) < 3.5
-            except ValueError:
-                active_structure = False
-
-        if active_structure or ("структурн" in text.lower() and "департамент" in text.lower()):
-            for match in UNIT_RE.finditer(text):
-                name = re.sub(r"\s+", " ", match.group(1)).strip(" ,")
-                abbr = match.group(2)
-                if name.lower().startswith("департамент") and len(name.split()) >= 2:
-                    store.add_org_unit(comparison_id, side, name, abbr, span["id"])
-                    units.append({"name": name, "abbreviation": abbr, "span_id": span["id"]})
-
-        owner_text = CLAUSE_PREFIX_RE.sub("", text)
-        owner_match = LEADING_OWNER_RE.search(owner_text)
-        if owner_match and label and label.startswith("5."):
-            current_owner = _clean_owner(owner_match.group("owner"))
-            section = _section(label)
-            if section:
-                owner_by_section[section] = current_owner
-            store.add_role(comparison_id, side, current_owner, span["id"])
-            roles.append({"name": current_owner, "span_id": span["id"]})
-
-        if current_main not in {"4", "5", "6", "7", "8", "9", "10", "11", "12"}:
-            continue
-        section = _section(label)
-        if current_main == "5":
-            owner = owner_by_section.get(section or "", current_owner)
-        else:
-            owner = "БВА / Главный аудитор"
-        if owner == "Не установлен":
-            continue
-        if not has_action(text):
-            continue
-        if len(text) < 35:
-            continue
-        action = best_action(text)
-        object_text, scope = object_and_scope(text, action)
-        function_id = stable_id("fn", comparison_id, side, span["id"], action)
-        fn = FunctionAssertion(
-            id=function_id,
-            side=side,
-            owner=owner,
-            action=action,
-            object=object_text,
-            scope=scope,
-            authority=authority(text),
-            text=text,
-            span_id=span["id"],
-            document_id=span["document_id"],
-            clause_label=label,
-        )
-        store.add_function(comparison_id, fn)
-        functions.append(fn)
-
-    dedup_units = {item["name"].lower(): item for item in units}
-    dedup_roles = {item["name"].lower(): item for item in roles}
-    return list(dedup_units.values()), functions, list(dedup_roles.values())
+from .registry import extract_units_and_functions
+from .search import SearchIndex
 
 
 def _owner_key(owner: str) -> str:
     return re.sub(r"[^а-яa-z0-9]+", " ", owner.lower().replace("ё", "е")).strip()
 
 
-def match_functions(before: list[FunctionAssertion], after: list[FunctionAssertion]) -> tuple[list[CandidateMatch], dict[str, list[tuple[FunctionAssertion, float]]]]:
+def match_functions(before: list[FunctionAssertion], after: list[FunctionAssertion], scorer=similarity) -> tuple[list[CandidateMatch], dict[str, list[tuple[FunctionAssertion, float]]]]:
     candidates: dict[str, list[tuple[FunctionAssertion, float]]] = {}
     matches: list[CandidateMatch] = []
     for old in before:
         ranked = sorted(
-            ((new, similarity(old.text, new.text)) for new in after), key=lambda item: item[1], reverse=True
-        )[:5]
+            ((new, scorer(old.text, new.text)) for new in after if not scope_conflicts(old.scope, new.scope)), key=lambda item: item[1], reverse=True
+        )
         candidates[old.id] = ranked
         if not ranked:
             continue
@@ -140,16 +36,50 @@ def match_functions(before: list[FunctionAssertion], after: list[FunctionAsserti
             continue
         same_owner = _owner_key(old.owner) == _owner_key(new.owner)
         relation = "preserved" if score >= 0.94 and same_owner else "changed" if same_owner else "transferred"
-        if len([item for item in ranked if item[1] >= max(0.46, score - 0.08)]) >= 2 and score < 0.72:
-            relation = "split"
+        old_words = set(tokens(old.object))
+        components = [(fn, value) for fn, value in ranked[:5] if value >= .38 and len(old_words & set(tokens(fn.object))) >= 2]
+        if len(components) >= 2 and score < .8:
+            left_words, right_words = [set(tokens(fn.object)) & old_words for fn, _ in components[:2]]
+            if left_words - right_words and right_words - left_words:
+                matches.extend(CandidateMatch(old, fn, value, 'split') for fn, value in components[:2])
+                continue
         matches.append(CandidateMatch(old, new, score, relation))
+    targets = defaultdict(list)
+    for match in matches:
+        targets[match.after.id].append(match)
+    for group in targets.values():
+        if len({m.before.text for m in group}) > 1:
+            for match in group:
+                if match.relation != 'split' and match.score < .94:
+                    match.relation = 'merged'
     return matches, candidates
 
 
-def _structure_findings(before_units: list[dict[str, Any]], after_units: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _structure_findings(before_units: list[dict[str, Any]], after_units: list[dict[str, Any]], after_spans=()) -> list[dict[str, Any]]:
     before = {item["name"].lower(): item for item in before_units}
     after = {item["name"].lower(): item for item in after_units}
     findings: list[dict[str, Any]] = []
+    transformed_old, transformed_new = set(), set()
+    for source in after_spans:
+        text = source['original_text'].lower()
+        if not re.search(r'\b(?:переименовать|переименован[аоы]?|преобразовать|преобразован[аоы]?)\b', text):
+            continue
+        if re.search(r'\b(?:не|проект|предлагается|рекомендуется)\b', text):
+            continue
+        old_keys = [key for key in before.keys()-after.keys() if key in text]
+        new_keys = [key for key in after.keys()-before.keys() if key in text]
+        if len(old_keys) != 1 or len(new_keys) != 1:
+            continue
+        old_key,new_key = old_keys[0],new_keys[0]
+        old,new = before[old_key],after[new_key]
+        transformed_old.add(old_key); transformed_new.add(new_key)
+        findings.append({'type':'structure_transformed','title':'В документе указано преобразование подразделения',
+            'summary':f"{old['name']} → {new['name']}; найдено явное указание в документе После.",
+            'before_owner':old['name'],'after_owner':new['name'],
+            'before_function':'Подразделение старого перечня','after_function':source['original_text'],
+            'before_span_id':old['span_id'],'after_span_id':source['id'],
+            'evidence_status':'MATCH','confidence':1,
+            'limitations':'Подтверждён текст указания; полномочия подписанта, утверждение и дата вступления в силу требуют отдельной проверки.'})
     for key in sorted(before.keys() & after.keys()):
         old, new = before[key], after[key]
         findings.append(
@@ -168,7 +98,7 @@ def _structure_findings(before_units: list[dict[str, Any]], after_units: list[di
                 "limitations": "Сохранение в перечне не доказывает неизменность всех функций.",
             }
         )
-    for key in sorted(after.keys() - before.keys()):
+    for key in sorted(after.keys() - before.keys() - transformed_new):
         new = after[key]
         findings.append(
             {
@@ -183,85 +113,59 @@ def _structure_findings(before_units: list[dict[str, Any]], after_units: list[di
                 "limitations": "Для вывода о юридическом создании требуется распорядительное основание.",
             }
         )
+    for key in sorted(before.keys() - after.keys() - transformed_old):
+        old = before[key]
+        findings.append({'type':'structure_removed','title':'Подразделение не найдено в новом перечне',
+            'summary':old['name'], 'before_owner':old['name'], 'before_function':'Присутствует в старом перечне',
+            'before_span_id':old['span_id'], 'evidence_status':'UNKNOWN', 'confidence':0,
+            'limitations':'Это не доказательство ликвидации: возможны переименование или неполный комплект.'})
     return findings
 
 
-def _function_findings(
-    before: list[FunctionAssertion],
-    after: list[FunctionAssertion],
-    matches: list[CandidateMatch],
-    candidates: dict[str, list[tuple[FunctionAssertion, float]]],
-) -> list[dict[str, Any]]:
-    findings: list[dict[str, Any]] = []
-    matched_after: set[str] = set()
-    by_before = {match.before.id: match for match in matches}
-    labels = {
-        "preserved": "Функция сохранена",
-        "changed": "Функция изменена",
-        "transferred": "Возможен перенос функции",
-        "split": "Возможно разделение функции",
-    }
+def _function_findings(before, after, matches, candidates, scorer=similarity):
+    findings = []
+    matched_after = {m.after.id for m in matches}
+    by_before = defaultdict(list)
+    for match in matches:
+        by_before[match.before.id].append(match)
+    labels = {"preserved": "Функция сохранена", "changed": "Функция изменена",
+              "transferred": "Возможен перенос функции", "split": "Возможно разделение функции",
+              "merged": "Возможно объединение функций"}
     for old in before:
-        match = by_before.get(old.id)
-        if match:
-            matched_after.add(match.after.id)
-            limitations = (
-                "Смысловое соответствие подтверждено текстами; изменение владельца требует проверки основания реорганизации."
-                if match.relation in {"transferred", "split"}
-                else "Сопоставление основано на загруженных версиях документов."
-            )
-            findings.append(
-                {
-                    "type": match.relation,
-                    "title": labels[match.relation],
-                    "summary": f"Сходство формулировок {round(match.score * 100)}%; сопоставлены действие, объект и область.",
-                    "before_owner": old.owner,
-                    "after_owner": match.after.owner,
-                    "before_function": old.text,
-                    "after_function": match.after.text,
-                    "before_span_id": old.span_id,
-                    "after_span_id": match.after.span_id,
-                    "evidence_status": "MATCH" if match.score >= 0.52 else "UNKNOWN",
-                    "confidence": match.score,
-                    "limitations": limitations,
-                }
-            )
+        links = by_before.get(old.id, [])
+        if links:
+            for match in links:
+                exact = old.text == match.after.text and old.owner == match.after.owner and old.owner != "Не установлен"
+                findings.append({
+                    "type": match.relation, "title": labels[match.relation],
+                    "summary": f"Найден кандидат соответствия; оценка сходства {round(match.score * 100)}%. Это не вероятность правильности.",
+                    "before_owner": old.owner, "after_owner": match.after.owner,
+                    "before_function": old.text, "after_function": match.after.text,
+                    "before_span_id": old.span_id, "after_span_id": match.after.span_id,
+                    "evidence_status": "MATCH" if exact else "UNKNOWN", "confidence": match.score,
+                    "limitations": "Связь требует проверки действия, объекта, области и полномочий. Владелец может быть не установлен.",
+                })
         else:
-            top = candidates.get(old.id, [])
-            top_score = top[0][1] if top else 0.0
-            findings.append(
-                {
-                    "type": "potential_loss",
-                    "title": "Функция не найдена в загруженном комплекте «После»",
-                    "summary": f"Эквивалентное покрытие не найдено; лучший проверенный кандидат имеет сходство {round(top_score * 100)}%.",
-                    "before_owner": old.owner,
-                    "before_function": old.text,
-                    "before_span_id": old.span_id,
-                    "evidence_status": "UNKNOWN",
-                    "confidence": round(1 - top_score, 4),
-                    "limitations": "Это не доказательство утраты функции в компании: вывод ограничен загруженным комплектом.",
-                }
-            )
-
+            ranked = candidates.get(old.id, [])
+            score = ranked[0][1] if ranked else 0
+            findings.append({
+                "type": "potential_loss", "title": "Функция не найдена в загруженном комплекте «После»",
+                "summary": f"Обследовано кандидатов: {len(ranked)}; лучшее сходство {round(score*100)}%.",
+                "before_owner": old.owner, "before_function": old.text, "before_span_id": old.span_id,
+                "evidence_status": "UNKNOWN", "confidence": 1-score,
+                "limitations": "Отсутствие совпадения не доказывает утрату функции в компании; результат ограничен комплектом и методом поиска.",
+            })
     for new in after:
         if new.id in matched_after:
             continue
-        best = max((similarity(new.text, old.text) for old in before), default=0.0)
-        if best >= 0.38:
-            continue
-        findings.append(
-            {
-                "type": "new",
-                "title": "Новая формулировка функции",
-                "summary": f"В комплекте «До» не найден близкий эквивалент; максимальное сходство {round(best * 100)}%.",
-                "after_owner": new.owner,
-                "after_function": new.text,
-                "after_span_id": new.span_id,
-                "evidence_status": "UNKNOWN",
-                "confidence": round(1 - best, 4),
-                "limitations": "Новая формулировка не обязательно означает впервые созданную функцию.",
-            }
-        )
+        best = max((scorer(new.text, old.text) for old in before), default=0.)
+        findings.append({
+            "type":"new", "title":"Функция без подтверждённого соответствия в комплекте «До»",
+            "summary":f"Лучший кандидат имеет сходство {round(best*100)}%; требуется проверка.",
+            "after_owner":new.owner, "after_function":new.text, "after_span_id":new.span_id,
+            "evidence_status":"UNKNOWN", "confidence":1-best,
+            "limitations":"Это не доказательство впервые созданной функции.",
+        })
     return findings
 
 
@@ -270,15 +174,14 @@ def _overlap_findings(after: list[FunctionAssertion]) -> list[dict[str, Any]]:
     conflicts: list[dict[str, Any]] = []
     for index, left in enumerate(after):
         for right in after[index + 1 :]:
-            if _owner_key(left.owner) == _owner_key(right.owner):
-                continue
+            same_owner = _owner_key(left.owner) == _owner_key(right.owner)
             if "не установлен" in {_owner_key(left.owner), _owner_key(right.owner)}:
                 continue
             generic_phrases = ("прочих поручен", "организует работу", "обеспечивает выполнение")
             if any(phrase in left.text.lower() or phrase in right.text.lower() for phrase in generic_phrases):
                 continue
             score = similarity(left.text, right.text)
-            if score >= 0.78 and not scope_conflicts(left.scope, right.scope):
+            if not same_owner and left.authority == right.authority and score >= 0.78 and not scope_conflicts(left.scope, right.scope):
                 duplicates.append(
                     {
                         "type": "possible_duplicate",
@@ -297,12 +200,12 @@ def _overlap_findings(after: list[FunctionAssertion]) -> list[dict[str, Any]]:
                 )
             authority_pair = {left.authority, right.authority}
             object_score = similarity(left.object, right.object)
-            if "исполняет" in authority_pair and authority_pair & {"утверждает", "контролирует"} and object_score >= 0.68:
+            if same_owner and "исполняет" in authority_pair and authority_pair & {"утверждает", "контролирует"} and object_score >= 0.68 and not scope_conflicts(left.scope, right.scope):
                 conflicts.append(
                     {
                         "type": "potential_conflict",
                         "title": "Потенциальное совмещение исполнения и контроля",
-                        "summary": "Для близкого объекта у разных владельцев найдены исполнительные и контрольные полномочия.",
+                        "summary": "У одного владельца найдены исполнение и контроль близкого объекта; проверьте разделение обязанностей и меры независимости.",
                         "before_owner": left.owner,
                         "after_owner": right.owner,
                         "before_function": left.text,
@@ -316,7 +219,7 @@ def _overlap_findings(after: list[FunctionAssertion]) -> list[dict[str, Any]]:
                 )
     duplicates.sort(key=lambda item: item["confidence"], reverse=True)
     conflicts.sort(key=lambda item: item["confidence"], reverse=True)
-    return duplicates[:12] + conflicts[:8]
+    return duplicates + conflicts
 
 
 class Analyzer:
@@ -334,6 +237,9 @@ class Analyzer:
             "|".join(sorted(doc["sha256"] for doc in docs)).encode()
         ).hexdigest()
         run_id = self.store.begin_run(comparison_id, self.model.mode, self.model.model, input_hash)
+        unread = [doc for doc in docs if doc['status'] != 'ready' or doc.get('warnings')]
+        metadata = {'incomplete_documents': [doc['filename'] for doc in unread], 'algorithm_version': 'audit-v2'}
+        self.store.snapshot_run(run_id, docs, metadata)
         sequence = 0
 
         def traced(tool: str, params: dict[str, Any], fn: Callable[[], Any], source_ids: list[str] | None = None) -> Any:
@@ -358,29 +264,62 @@ class Analyzer:
             after_units, after_functions, after_roles = traced(
                 "extract_registry", {"side": "after"}, lambda: extract_units_and_functions(self.store, comparison_id, "after")
             )
+            if self.model.mode == 'live':
+                before_functions = traced('model_extract_functions', {'side':'before'},
+                    lambda:self.model.extract_functions(self.store,comparison_id,'before'))
+                after_functions = traced('model_extract_functions', {'side':'after'},
+                    lambda:self.model.extract_functions(self.store,comparison_id,'after'))
+            index = SearchIndex(self.store)
+            metadata['function_ids'] = [f.id for f in before_functions + after_functions]
+            traced('prepare_search_index', {'mode': index.mode, 'model': index.model_name},
+                   lambda: index.prepare([fn.text for fn in before_functions + after_functions]))
+            metadata['search_mode'] = index.mode
+            metadata['embedding_model'] = index.model_name if index.mode == 'fastembed' else None
+            self.store.snapshot_run(run_id, docs, metadata)
             matches, candidates = traced(
                 "compare_functions",
                 {"before_count": len(before_functions), "after_count": len(after_functions), "threshold": 0.38},
-                lambda: match_functions(before_functions, after_functions),
+                lambda: match_functions(before_functions, after_functions, index.score),
             )
+            if self.model.mode == 'live':
+                matches = traced('model_match_functions', {'before_count':len(before_functions)},
+                    lambda:self.model.match_functions(self.store,before_functions,candidates))
             for match in matches:
                 self.store.add_match(run_id, match, "MATCH" if match.score >= 0.52 else "UNKNOWN")
             structure = traced(
                 "compare_structure", {"before_units": len(before_units), "after_units": len(after_units)},
-                lambda: _structure_findings(before_units, after_units),
+                lambda: _structure_findings(before_units, after_units, self.store.get_spans(comparison_id, 'after')),
             )
             functional = traced(
                 "check_coverage", {"candidate_depth": 5},
-                lambda: _function_findings(before_functions, after_functions, matches, candidates),
+                lambda: _function_findings(before_functions, after_functions, matches, candidates, index.score),
             )
             overlap = traced(
                 "check_overlap_and_independence", {"duplicate_threshold": 0.78, "conflict_object_threshold": 0.68},
                 lambda: _overlap_findings(after_functions),
             )
+            metadata['coverage'] = {old.id: {'examined_functions':len(after_functions),
+                'eligible_candidates':len(candidates.get(old.id, [])),
+                'top_candidates':[{'function_id':fn.id,'source_id':fn.span_id,'score':score} for fn,score in candidates.get(old.id, [])[:5]]}
+                for old in before_functions}
+            self.store.snapshot_run(run_id, docs, metadata)
             findings = structure + functional + overlap
+            incomplete = bool(unread) or not before_functions or not after_functions
+            if incomplete:
+                for finding in findings:
+                    if finding['type'] in {'potential_loss', 'new', 'structure_added'}:
+                        finding['evidence_status'] = 'UNKNOWN'
+                        finding['limitations'] += ' Комплект извлечён не полностью; вывод предварительный.'
+                    if finding['type'] == 'potential_loss':
+                        finding['type'] = 'insufficient_data'
+                        finding['title'] = 'Недостаточно данных для проверки покрытия функции'
+                findings.insert(0, {'type': 'insufficient_data', 'title': 'Анализ неполного комплекта',
+                    'summary': 'Есть непрочитанные документы либо на одной стороне не извлечены функции.',
+                    'evidence_status': 'UNKNOWN', 'confidence': 0,
+                    'limitations': 'Нельзя трактовать отсутствие результатов как отсутствие рисков. ' + '; '.join(metadata['incomplete_documents'])})
             source_ids = [
                 sid
-                for item in findings[:20]
+                for item in findings
                 for sid in (item.get("before_span_id"), item.get("after_span_id"))
                 if sid
             ]
@@ -400,7 +339,7 @@ class Analyzer:
             )
             for order, finding in enumerate(findings):
                 self.store.add_finding(run_id, comparison_id, finding, order)
-            self.store.finish_run(run_id, "completed")
+            self.store.finish_run(run_id, "partial" if incomplete else "completed")
             result = self.store.analysis_result(comparison_id)
             result["model_review"] = model_review
             result["registry"] = {

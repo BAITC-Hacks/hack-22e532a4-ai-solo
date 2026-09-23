@@ -4,9 +4,17 @@ import hashlib
 import json
 import subprocess
 import sys
+import os
+import tempfile
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+_evaluation_state = tempfile.TemporaryDirectory(prefix='baqbaq-probe-')
+os.environ['BAQBAQ_DB_PATH'] = str(Path(_evaluation_state.name) / 'probe.db')
+os.environ['BAQBAQ_UPLOAD_DIR'] = str(Path(_evaluation_state.name) / 'uploads')
+os.environ['BAQBAQ_MODEL_MODE'] = 'offline'
 
 from fastapi.testclient import TestClient
 
