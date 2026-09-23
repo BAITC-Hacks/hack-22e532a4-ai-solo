@@ -15,19 +15,19 @@ load_dotenv(ROOT / ".env")
 class Settings:
     db_path: Path = Path(os.getenv("BAQBAQ_DB_PATH", ROOT / "data" / "baqbaq.db"))
     upload_dir: Path = Path(os.getenv("BAQBAQ_UPLOAD_DIR", ROOT / "uploads"))
-    model_mode: str = os.getenv("BAQBAQ_MODEL_MODE", "offline").strip().lower()
+    model_mode: str = os.getenv("BAQBAQ_MODEL_MODE", "live").strip().lower()
     model: str = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
     base_url: str | None = os.getenv("OPENAI_BASE_URL") or None
     demo_before: Path = Path(
         os.getenv(
             "BAQBAQ_DEMO_BEFORE",
-            r"C:\Users\User\Downloads\Положение_о_внутреннем_аудите_редакция_8_обезличено.docx",
+            ROOT / 'data' / 'organizer' / 'revision_8.docx',
         )
     )
     demo_after: Path = Path(
         os.getenv(
             "BAQBAQ_DEMO_AFTER",
-            r"C:\Users\User\Downloads\Положение_о_внутреннем_аудите_редакция_9_обезличено.docx",
+            ROOT / 'data' / 'organizer' / 'revision_9.docx',
         )
     )
 

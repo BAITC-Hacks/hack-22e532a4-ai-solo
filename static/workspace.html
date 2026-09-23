@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="BaqBaq — проверяемая сверка организационных изменений" />
+    <title>BaqBaq · Сверка реорганизации</title>
+    <link rel="icon" type="image/png" href="/assets/baqbaq-transparent.png" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/workspace.css?v=3" />
+  </head>
+  <body class="workspace-page">
+    <a class="skip-link" href="#workspace">К основному содержанию</a>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="BaqBaq — главная">
+        <img class="brand-image" src="/assets/baqbaq-transparent.png" width="100" height="100" alt="BaqBaq" />
+      </a>
+      <div class="topbar-actions">
+        <div class="track-brand"><svg viewBox="0 0 900 145" role="img" aria-label="Казахтелеком"><image href="/assets/kazakhtelecom.svg" width="2500" height="404" /></svg><span>Спец-трек · HackAlem AI</span></div>
+        <span id="mode-badge" class="mode-badge"><span class="status-dot"></span><span class="mode-long">Проверка режима…</span><span class="mode-short">Режим…</span></span>
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="Переключить тему" title="Переключить тему">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.4A7 7 0 0 1 12 3Z" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="workspace" class="page-shell">
+      <section class="workspace-intro">
+        <div><h1 id="page-title">Анализ организационных изменений</h1><p class="intro-description">Сопоставление структуры, функций и ответственности между редакциями документов.</p></div>
+      </section>
+      <div class="workspace-controls"><div class="field"><label for="comparison-history">Рабочие проверки</label><select id="comparison-history"><option>Загрузка…</option></select></div>
+        <button id="new-comparison" class="button button-secondary" type="button">Новая проверка</button>
+        <input id="model-mode" type="hidden" value="live" />
+      </div>
+
+      <section class="upload-section" aria-labelledby="documents-title">
+        <div class="section-heading">
+          <div><p class="step-label">01 · Документы</p><h2 id="documents-title">Исходная и новая редакции</h2></div>
+        </div>
+        <div id="upload-error" class="inline-alert error hidden" role="alert"></div>
+        <div class="upload-grid">
+          <article class="upload-card" data-side="before">
+            <div class="card-heading"><span class="set-letter">A</span><div><h3>До изменений</h3><p>Исходные положения и структура</p></div></div>
+            <label class="drop-zone" for="before-files">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5" /></svg>
+              <span><strong>Выберите файлы</strong> или перетащите сюда</span>
+              <small>DOCX, текстовый PDF или XLSX · до 25 МБ</small>
+            </label>
+            <input id="before-files" class="visually-hidden" type="file" multiple accept=".docx,.pdf,.xlsx" />
+            <div id="before-docs" class="document-list" aria-live="polite"><p class="empty-mini">Файлы ещё не добавлены</p></div>
+          </article>
+          <article class="upload-card" data-side="after">
+            <div class="card-heading"><span class="set-letter after">B</span><div><h3>После изменений</h3><p>Новая редакция и приложения</p></div></div>
+            <label class="drop-zone" for="after-files">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5" /></svg>
+              <span><strong>Выберите файлы</strong> или перетащите сюда</span>
+              <small>DOCX, текстовый PDF или XLSX · до 25 МБ</small>
+            </label>
+            <input id="after-files" class="visually-hidden" type="file" multiple accept=".docx,.pdf,.xlsx" />
+            <div id="after-docs" class="document-list" aria-live="polite"><p class="empty-mini">Файлы ещё не добавлены</p></div>
+          </article>
+        </div>
+        <div class="analysis-bar">
+          <div id="readiness" class="readiness"><span class="readiness-icon">0/2</span><span><strong>Загрузите документы обеих редакций</strong><small>Положения, организационная структура и приложения</small></span></div>
+          <button id="analyze-button" class="button button-primary" type="button" disabled>
+            <span>Запустить анализ</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+          </button>
+        </div>
+        <p class="privacy-note">Текст документов передаётся в OpenAI для анализа. Загружайте только разрешённые данные. Проверки доступны в этом браузере; сохраните итоговый отчёт.</p>
+        <div id="progress" class="progress-panel hidden" aria-live="polite" aria-busy="true">
+          <div class="progress-line"><span></span></div>
+          <p id="progress-text">Извлекаем структуру и функции…</p>
+        </div>
+      </section>
+
+      <section id="results-section" class="results-section" aria-labelledby="results-title">
+        <div class="section-heading results-heading">
+          <div><p class="step-label">02 · Результаты</p><h2 id="results-title">Изменения и подтверждающие источники</h2></div>
+          <div class="report-actions">
+            <a id="report-md" class="button button-secondary disabled" href="#" aria-disabled="true">Markdown</a>
+            <a id="report-html" class="button button-secondary disabled" href="#" aria-disabled="true">HTML-отчёт</a>
+          </div>
+        </div>
+
+        <div class="field"><label for="run-history">История запусков</label><select id="run-history"><option value="">Анализ ещё не запускался</option></select></div>
+        <div id="partial-warning" class="inline-alert hidden" role="status">Комплект проанализирован не полностью. Проверьте предупреждения документов; отсутствие вывода не означает отсутствие риска.</div>
+        <div id="result-error" class="inline-alert error hidden" role="alert"><span></span><button class="text-button" type="button" id="retry-analysis">Повторить</button></div>
+        <div id="empty-state" class="empty-state">
+          <h3>Результаты появятся после анализа</h3>
+          <p>Для каждого изменения — функция, ответственное подразделение и цитата из документа.</p>
+        </div>
+
+        <div id="results-content" class="hidden">
+          <div id="summary-cards" class="summary-cards"></div>
+          <div class="toolbar">
+            <div class="field search-field"><label for="result-search">Поиск по результатам</label><div class="input-shell"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="result-search" type="search" placeholder="Функция, владелец, пункт…" autocomplete="off" /></div></div>
+            <div class="field"><label for="type-filter">Тип изменения</label><select id="type-filter"><option value="focus" selected>Фокус: важные изменения</option><option value="attention">Все изменения и риски</option><option value="">Все типы</option><option value="structure">Структура</option><option value="preserved">Сохранено</option><option value="transferred">Перенесено</option><option value="changed">Изменено / разделено</option><option value="potential_loss">Потенциальная потеря</option><option value="possible_duplicate">Дублирование</option><option value="potential_conflict">Конфликт интересов</option><option value="new">Новое</option></select></div>
+            <div class="field"><label for="evidence-filter">Доказательства</label><select id="evidence-filter"><option value="">Все статусы</option><option value="MATCH">Точное основание</option><option value="UNKNOWN">Требует проверки</option><option value="CONFLICT">Противоречие</option><option value="DENIED">Отклонено</option></select></div>
+          </div>
+
+          <div class="workbench">
+            <div class="table-panel">
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th>Изменение</th><th>Владелец / функция A</th><th>Владелец / функция B</th><th>Основания</th></tr></thead>
+                  <tbody id="findings-body"></tbody>
+                </table>
+              </div>
+              <div id="no-filter-results" class="empty-filter hidden"><strong>Ничего не найдено</strong><span>Измените поиск или фильтры.</span></div>
+            </div>
+
+            <aside id="evidence-panel" class="evidence-panel" aria-labelledby="evidence-title">
+              <div id="evidence-placeholder" class="evidence-placeholder"><span class="evidence-symbol">↗</span><h3 id="evidence-title">Выберите вывод</h3><p>Здесь откроются точные цитаты двух редакций, ограничение вывода и журнал действий.</p></div>
+              <div id="evidence-content" class="hidden">
+                <div class="evidence-topline"><span id="detail-type" class="finding-badge"></span><span id="detail-confidence" class="confidence"></span></div>
+                <h3 id="detail-title"></h3><p id="detail-summary" class="detail-summary"></p>
+                <label class="diff-toggle"><input type="checkbox" id="show-diff" /> Выделить различия в формулировках</label>
+                <div class="source-pair">
+                  <article class="source-card"><div class="source-label" id="before-source-side">До</div><p id="before-meta" class="source-meta"></p><blockquote id="before-quote"></blockquote></article>
+                  <article class="source-card after-source"><div class="source-label" id="after-source-side">После</div><p id="after-meta" class="source-meta"></p><blockquote id="after-quote"></blockquote></article>
+                </div>
+                <details id="source-context" class="hidden"><summary>Контекст в документе</summary><div id="source-context-text"></div></details>
+                <div class="limitation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20L12 3Zm0 6v5m0 3v1"/></svg><div><strong>Граница вывода</strong><p id="detail-limit"></p></div></div>
+                <fieldset class="review-box"><legend>Решение сотрудника</legend><label for="review-note">Комментарий к решению</label><textarea id="review-note" rows="2" maxlength="1000"></textarea><div class="segmented" id="review-buttons"><button type="button" data-decision="confirmed">Подтверждено</button><button type="button" data-decision="rejected">Отклонено</button><button type="button" data-decision="review">Проверить</button></div><p id="review-status" class="review-status" aria-live="polite"></p><details><summary>История решений</summary><ul id="review-history"></ul></details></fieldset>
+                <details class="trace-box"><summary>Этапы анализа <span id="trace-count"></span></summary><ol id="trace-list"></ol></details>
+                <form id="ask-form" class="ask-form"><label for="agent-question">Уточнить у агента</label><textarea id="agent-question" rows="3" placeholder="Например: почему это перенос, а не потеря?" required minlength="3"></textarea><button class="button button-primary" type="submit">Задать вопрос</button><div id="agent-answer" class="agent-answer hidden" aria-live="polite"></div></form>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer><span>BaqBaq · HackAlem AI</span><span>Выводы требуют проверки ответственным сотрудником</span></footer>
+    <div id="toast" class="toast hidden" role="status"></div>
+    <script src="/app.js?v=3" defer></script>
+  </body>
+</html>

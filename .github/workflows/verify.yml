@@ -1,0 +1,18 @@
+name: Verify local jury path
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      BAQBAQ_MODEL_MODE: offline
+      BAQBAQ_SEARCH_MODE: lexical
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/verify.py
+      - run: node tests/frontend_jury.cjs
+      - run: python scripts/check_release.py

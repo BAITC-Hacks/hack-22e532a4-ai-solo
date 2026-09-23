@@ -19,6 +19,7 @@ from .domain import ParsedDocument, ParsedSpan
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 SUPPORTED = {".docx", ".pdf", ".xlsx"}
 MAX_BYTES = 25 * 1024 * 1024
+MAX_UNPACKED = 100 * 1024 * 1024
 CLAUSE_RE = re.compile(r"^\s*((?:\d+\.)+\d*|\d+\.)(?:\s+|$)")
 MULTI_CLAUSE_RE = re.compile(r"(?<!\S)(?=(?:\d+\.){2,}\s)")
 
@@ -65,6 +66,16 @@ def validate_file(path: Path) -> None:
         raise IngestionError("Расширение не соответствует OOXML-файлу")
     if suffix == ".pdf" and not head.startswith(b"%PDF"):
         raise IngestionError("Расширение не соответствует PDF-файлу")
+    if suffix in {'.docx', '.xlsx'}:
+        try:
+            with zipfile.ZipFile(path) as archive:
+                entries = archive.infolist()
+                if len(entries)>3000 or sum(e.file_size for e in entries)>MAX_UNPACKED:
+                    raise IngestionError('OOXML превышает безопасный лимит: 3000 частей / 100 МБ после распаковки')
+                if any(e.file_size>2*1024*1024 and e.file_size>max(1,e.compress_size)*200 for e in entries):
+                    raise IngestionError('Слишком высокая степень сжатия OOXML')
+        except zipfile.BadZipFile as exc:
+            raise IngestionError('OOXML-контейнер повреждён') from exc
 
 
 def store_upload(source: Path, upload_root: Path, comparison_id: str, side: str) -> Path:
@@ -143,7 +154,25 @@ def _numbering(zipf: zipfile.ZipFile) -> tuple[dict[str, str], dict[tuple[str, s
         num_id = num.get(W + "numId", "")
         abstract = num.find(W + "abstractNumId")
         if abstract is not None:
-            num_to_abstract[num_id] = abstract.get(W + "val", "")
+            original = abstract.get(W + "val", "")
+            aid = original + ':' + num_id
+            for (key, level), spec in list(abstracts.items()):
+                if key == original:
+                    abstracts[(aid, level)] = dict(spec)
+            for override in num.findall(W + 'lvlOverride'):
+                level = override.get(W + 'ilvl', '0')
+                spec = abstracts.get((aid, level), {})
+                custom = override.find(W + 'lvl')
+                if custom is not None:
+                    for tag, key in [('start','start'),('numFmt','fmt'),('lvlText','text')]:
+                        node = custom.find(W + tag)
+                        if node is not None:
+                            spec[key] = node.get(W + 'val')
+                start = override.find(W + 'startOverride')
+                if start is not None:
+                    spec['start'] = start.get(W + 'val', '1')
+                abstracts[(aid, level)] = spec
+            num_to_abstract[num_id] = aid
     return num_to_abstract, abstracts
 
 
@@ -167,15 +196,19 @@ def _paragraph_number(
     spec = levels.get((abstract or "", str(ilvl)))
     if not spec:
         return None
-    values = counters.setdefault(num_id, [0] * 9)
+    if ilvl not in range(9):
+        raise IngestionError('Неподдерживаемый уровень нумерации DOCX')
+    values = counters.setdefault(num_id, [int(levels.get((abstract or '', str(i)), {}).get('start', '1'))-1 for i in range(9)])
     values[ilvl] += 1
     for idx in range(ilvl + 1, len(values)):
-        values[idx] = 0
+        values[idx] = int(levels.get((abstract or '', str(idx)), {}).get('start', '1'))-1
     template = spec["text"]
     for idx in range(9):
-        value = values[idx] or 1
         level_spec = levels.get((abstract or "", str(idx)), {"fmt": "decimal"})
+        value = values[idx] if values[idx] >= int(level_spec.get('start','1')) else int(level_spec.get('start','1'))
         fmt = level_spec.get("fmt")
+        if fmt not in {'decimal','lowerLetter','lowerRoman','bullet'}:
+            return None
         rendered = _alpha(value) if fmt == "lowerLetter" else _roman(value) if fmt == "lowerRoman" else str(value)
         template = template.replace(f"%{idx+1}", rendered)
     return template
@@ -194,6 +227,10 @@ def parse_docx(path: Path) -> tuple[list[ParsedSpan], list[str]]:
             if "word/document.xml" not in zipf.namelist():
                 raise IngestionError("В DOCX отсутствует word/document.xml")
             num_to_abstract, levels = _numbering(zipf)
+            styles = {}
+            if 'word/styles.xml' in zipf.namelist():
+                for style in ET.fromstring(zipf.read('word/styles.xml')).findall(W+'style'):
+                    styles[style.get(W+'styleId')] = style
             counters: dict[str, list[int]] = {}
             root = ET.fromstring(zipf.read("word/document.xml"))
             body = root.find(W + "body")
@@ -206,7 +243,22 @@ def parse_docx(path: Path) -> tuple[list[ParsedSpan], list[str]]:
                     text = _text_of(child)
                     if not text:
                         continue
+                    ppr = child.find(W+'pPr')
+                    style_node = ppr.find(W+'pStyle') if ppr is not None else None
+                    if ppr is not None and ppr.find(W+'numPr') is None and style_node is not None:
+                        style_id, visited = style_node.get(W+'val'), set()
+                        while style_id in styles and style_id not in visited:
+                            visited.add(style_id)
+                            style = styles[style_id]
+                            numpr = style.find(W+'pPr/'+W+'numPr')
+                            if numpr is not None:
+                                ppr.append(ET.fromstring(ET.tostring(numpr)))
+                                break
+                            based = style.find(W+'basedOn')
+                            style_id = based.get(W+'val') if based is not None else None
                     automatic = _paragraph_number(child, num_to_abstract, levels, counters)
+                    if automatic is None and ppr is not None and ppr.find(W+'numPr') is not None:
+                        warnings.append('Нумерация одного из абзацев не разрешена; используйте локатор абзаца')
                     if automatic and not CLAUSE_RE.match(text):
                         text = f"{automatic} {text}"
                     for piece in _split_clauses(text):
@@ -220,8 +272,8 @@ def parse_docx(path: Path) -> tuple[list[ParsedSpan], list[str]]:
                     table_no += 1
                     for row_no, row in enumerate(child.findall(W + "tr"), 1):
                         cells = [_text_of(cell) for cell in row.findall(W + "tc")]
-                        text = " | ".join(cell for cell in cells if cell)
-                        if text:
+                        text = " | ".join(cells)
+                        if any(cells):
                             ordinal += 1
                             spans.append(
                                 ParsedSpan(
@@ -235,6 +287,8 @@ def parse_docx(path: Path) -> tuple[list[ParsedSpan], list[str]]:
                             )
     except zipfile.BadZipFile as exc:
         raise IngestionError("DOCX повреждён или не является ZIP-контейнером") from exc
+    except (ET.ParseError, ValueError, IndexError) as exc:
+        raise IngestionError('DOCX содержит повреждённый XML или некорректную нумерацию') from exc
     if not spans:
         warnings.append("Текст не извлечён; возможно, документ содержит только изображения")
     return spans, warnings
@@ -245,6 +299,8 @@ def parse_pdf(path: Path) -> tuple[list[ParsedSpan], list[str]]:
     warnings: list[str] = []
     try:
         reader = PdfReader(str(path))
+        if len(reader.pages)>500:
+            raise IngestionError('PDF превышает лимит 500 страниц')
         for page_no, page in enumerate(reader.pages, 1):
             text = (page.extract_text() or "").strip()
             if not text:
@@ -277,11 +333,15 @@ def parse_xlsx(path: Path) -> tuple[list[ParsedSpan], list[str]]:
     spans: list[ParsedSpan] = []
     warnings: list[str] = []
     try:
-        workbook = load_workbook(path, read_only=True, data_only=True, keep_links=False)
+        workbook = load_workbook(path, read_only=True, data_only=False, keep_links=False)
         for sheet in workbook.worksheets:
+            if (sheet.max_row or 0)>10000 or (sheet.max_column or 0)>100:
+                raise IngestionError('XLSX превышает лимит 10000 строк / 100 столбцов на лист')
             for row in sheet.iter_rows():
-                values = [str(cell.value).strip() for cell in row if cell.value not in (None, "")]
-                if not values:
+                if any(cell.data_type=='f' for cell in row):
+                    warnings.append(f'Лист {sheet.title}: формулы не вычисляются; экспортируйте значения для полного анализа')
+                values = [str(cell.value).strip() if cell.value is not None and cell.data_type!='f' else '' for cell in row]
+                if not any(values):
                     continue
                 text = " | ".join(values)
                 ordinal = len(spans) + 1

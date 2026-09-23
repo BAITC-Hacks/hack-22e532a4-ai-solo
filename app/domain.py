@@ -42,6 +42,7 @@ class FunctionAssertion:
     span_id: str
     document_id: str
     clause_label: str | None
+    context_span_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

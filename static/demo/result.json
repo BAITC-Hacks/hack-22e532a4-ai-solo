@@ -1,0 +1,1072 @@
+{
+  "run": {
+    "id": "run_40c74735182c4d26",
+    "comparison_id": "cmp_71a0ae8bd0d64f07",
+    "status": "completed",
+    "model_mode": "offline",
+    "model": "gpt-4.1-mini",
+    "prompt_version": "baqbaq-2026-09-23",
+    "input_hash": "427a9b8bfdfeb1d3ec679645c077335493022e8cb5b1ef60fb368f9cef115578",
+    "started_at": "2026-09-23T12:03:44.049761+00:00",
+    "completed_at": "2026-09-23T12:03:44.452701+00:00",
+    "error": null
+  },
+  "findings": [
+    {
+      "id": "finding_a2ebb9bd5e865992b252",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "structure_transformed",
+      "title": "В документе указано преобразование подразделения",
+      "summary": "Отдел закупок → Отдел снабжения; найдено явное указание в документе После.",
+      "before_owner": "Отдел закупок",
+      "after_owner": "Отдел снабжения",
+      "before_function": "Подразделение старого перечня",
+      "after_function": "1.4. Переименовать Отдел закупок в Отдел снабжения.",
+      "before_span_id": "span_38ab9ee7d91d5fe795e7",
+      "after_span_id": "span_ef993294f9ac5632875f",
+      "evidence_status": "MATCH",
+      "confidence": 1.0,
+      "limitations": "Подтверждён текст указания; полномочия подписанта, утверждение и дата вступления в силу требуют отдельной проверки.",
+      "sort_order": 0,
+      "before_source": {
+        "id": "span_38ab9ee7d91d5fe795e7",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "before",
+        "ordinal": 2,
+        "locator": "абзац 2",
+        "clause_label": "1",
+        "kind": "paragraph",
+        "original_text": "1. Отдел закупок.",
+        "normalized_text": "1 отдел закупок",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_before.docx",
+        "revision": "редакция 8",
+        "file_type": "docx"
+      },
+      "after_source": {
+        "id": "span_ef993294f9ac5632875f",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 6,
+        "locator": "абзац 6",
+        "clause_label": "1.4",
+        "kind": "paragraph",
+        "original_text": "1.4. Переименовать Отдел закупок в Отдел снабжения.",
+        "normalized_text": "1 4 переименовать отдел закупок в отдел снабжения",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_6554650ad9835d1394c1",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "structure_preserved",
+      "title": "Подразделение сохранено в перечне",
+      "summary": "Отдел отчетности присутствует в обоих загруженных комплектах.",
+      "before_owner": "Отдел отчетности",
+      "after_owner": "Отдел отчетности",
+      "before_function": "Присутствует в составе структуры",
+      "after_function": "Присутствует в составе структуры",
+      "before_span_id": "span_51977f10b75f5f1da9e9",
+      "after_span_id": "span_34907049d78e5e598c7a",
+      "evidence_status": "MATCH",
+      "confidence": 0.99,
+      "limitations": "Сохранение в перечне не доказывает неизменность всех функций.",
+      "sort_order": 1,
+      "before_source": {
+        "id": "span_51977f10b75f5f1da9e9",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "before",
+        "ordinal": 3,
+        "locator": "абзац 3",
+        "clause_label": "1.1",
+        "kind": "paragraph",
+        "original_text": "1.1. Отдел отчетности.",
+        "normalized_text": "1 1 отдел отчетности",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_before.docx",
+        "revision": "редакция 8",
+        "file_type": "docx"
+      },
+      "after_source": {
+        "id": "span_34907049d78e5e598c7a",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 3,
+        "locator": "абзац 3",
+        "clause_label": "1.1",
+        "kind": "paragraph",
+        "original_text": "1.1. Отдел отчетности.",
+        "normalized_text": "1 1 отдел отчетности",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_206f6d3ffbcf57279180",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "structure_added",
+      "title": "Подразделение добавлено в перечень",
+      "summary": "Отдел мониторинга найдено только в комплекте «После».",
+      "before_owner": null,
+      "after_owner": "Отдел мониторинга",
+      "before_function": null,
+      "after_function": "Добавлено в перечисленный состав",
+      "before_span_id": null,
+      "after_span_id": "span_4c622d9e55b95d93bdd8",
+      "evidence_status": "MATCH",
+      "confidence": 0.96,
+      "limitations": "Для вывода о юридическом создании требуется распорядительное основание.",
+      "sort_order": 2,
+      "before_source": null,
+      "after_source": {
+        "id": "span_4c622d9e55b95d93bdd8",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 5,
+        "locator": "абзац 5",
+        "clause_label": "1.3",
+        "kind": "paragraph",
+        "original_text": "1.3. Отдел мониторинга.",
+        "normalized_text": "1 3 отдел мониторинга",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_07ff04c887d25733993b",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "structure_added",
+      "title": "Подразделение добавлено в перечень",
+      "summary": "Отдел обучения найдено только в комплекте «После».",
+      "before_owner": null,
+      "after_owner": "Отдел обучения",
+      "before_function": null,
+      "after_function": "Добавлено в перечисленный состав",
+      "before_span_id": null,
+      "after_span_id": "span_7a35678dc89954c8ab04",
+      "evidence_status": "MATCH",
+      "confidence": 0.96,
+      "limitations": "Для вывода о юридическом создании требуется распорядительное основание.",
+      "sort_order": 3,
+      "before_source": null,
+      "after_source": {
+        "id": "span_7a35678dc89954c8ab04",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 4,
+        "locator": "абзац 4",
+        "clause_label": "1.2",
+        "kind": "paragraph",
+        "original_text": "1.2. Отдел обучения.",
+        "normalized_text": "1 2 отдел обучения",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_1a70d57b7ca1541a9bc8",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "transferred",
+      "title": "Возможен перенос функции",
+      "summary": "Найден кандидат соответствия; оценка сходства 100%. Это не вероятность правильности.",
+      "before_owner": "Директор закупок",
+      "after_owner": "Директор снабжения",
+      "before_function": "Контролирует качество закупочной деятельности.",
+      "after_function": "Контролирует качество закупочной деятельности.",
+      "before_span_id": "span_876d3023621957dba0eb",
+      "after_span_id": "span_4047e9f7f09c5ac59a76",
+      "evidence_status": "UNKNOWN",
+      "confidence": 1.0,
+      "limitations": "Связь требует проверки действия, объекта, области и полномочий. Владелец может быть не установлен.",
+      "sort_order": 4,
+      "before_source": {
+        "id": "span_876d3023621957dba0eb",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "before",
+        "ordinal": 5,
+        "locator": "абзац 5",
+        "clause_label": "2.1",
+        "kind": "paragraph",
+        "original_text": "2.1. Контролирует качество закупочной деятельности.",
+        "normalized_text": "2 1 контролирует качество закупочной деятельности",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_before.docx",
+        "revision": "редакция 8",
+        "file_type": "docx"
+      },
+      "after_source": {
+        "id": "span_4047e9f7f09c5ac59a76",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 8,
+        "locator": "абзац 8",
+        "clause_label": "7.1",
+        "kind": "paragraph",
+        "original_text": "7.1. Контролирует качество закупочной деятельности.",
+        "normalized_text": "7 1 контролирует качество закупочной деятельности",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_1f7eeaacb35d5dba984f",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "transferred",
+      "title": "Возможен перенос функции",
+      "summary": "Найден кандидат соответствия; оценка сходства 100%. Это не вероятность правильности.",
+      "before_owner": "Директор закупок",
+      "after_owner": "Руководитель обучения",
+      "before_function": "Формирует график обучения сотрудников.",
+      "after_function": "Формирует график обучения сотрудников.",
+      "before_span_id": "span_8cbad6cfaf715f5cbd1c",
+      "after_span_id": "span_26bccf6cc7225576ab30",
+      "evidence_status": "UNKNOWN",
+      "confidence": 1.0,
+      "limitations": "Связь требует проверки действия, объекта, области и полномочий. Владелец может быть не установлен.",
+      "sort_order": 5,
+      "before_source": {
+        "id": "span_8cbad6cfaf715f5cbd1c",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "before",
+        "ordinal": 6,
+        "locator": "абзац 6",
+        "clause_label": "2.2",
+        "kind": "paragraph",
+        "original_text": "2.2. Формирует график обучения сотрудников.",
+        "normalized_text": "2 2 формирует график обучения сотрудников",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_before.docx",
+        "revision": "редакция 8",
+        "file_type": "docx"
+      },
+      "after_source": {
+        "id": "span_26bccf6cc7225576ab30",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 10,
+        "locator": "абзац 10",
+        "clause_label": "8.1",
+        "kind": "paragraph",
+        "original_text": "8.1. Формирует график обучения сотрудников.",
+        "normalized_text": "8 1 формирует график обучения сотрудников",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_7d2b2f3ddeff53a58d5d",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "potential_loss",
+      "title": "Функция не найдена в загруженном комплекте «После»",
+      "summary": "Обследовано кандидатов: 4; лучшее сходство 2%.",
+      "before_owner": "Директор закупок",
+      "after_owner": null,
+      "before_function": "Хранит резервные копии архива договоров.",
+      "after_function": null,
+      "before_span_id": "span_1124cb08f2dd524ea35a",
+      "after_span_id": null,
+      "evidence_status": "UNKNOWN",
+      "confidence": 0.9825,
+      "limitations": "Отсутствие совпадения не доказывает утрату функции в компании; результат ограничен комплектом и методом поиска.",
+      "sort_order": 6,
+      "before_source": {
+        "id": "span_1124cb08f2dd524ea35a",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "before",
+        "ordinal": 7,
+        "locator": "абзац 7",
+        "clause_label": "2.3",
+        "kind": "paragraph",
+        "original_text": "2.3. Хранит резервные копии архива договоров.",
+        "normalized_text": "2 3 хранит резервные копии архива договоров",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_before.docx",
+        "revision": "редакция 8",
+        "file_type": "docx"
+      },
+      "after_source": null,
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_553ced40b0df56a58df3",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "preserved",
+      "title": "Функция сохранена",
+      "summary": "Найден кандидат соответствия; оценка сходства 100%. Это не вероятность правильности.",
+      "before_owner": "Директор отчетности",
+      "after_owner": "Директор отчетности",
+      "before_function": "Формирует ежемесячный реестр корпоративных рисков.",
+      "after_function": "Формирует ежемесячный реестр корпоративных рисков.",
+      "before_span_id": "span_13209772d49e53bb8efc",
+      "after_span_id": "span_f4f066d014b6519fa426",
+      "evidence_status": "MATCH",
+      "confidence": 1.0,
+      "limitations": "Связь требует проверки действия, объекта, области и полномочий. Владелец может быть не установлен.",
+      "sort_order": 7,
+      "before_source": {
+        "id": "span_13209772d49e53bb8efc",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "before",
+        "ordinal": 9,
+        "locator": "абзац 9",
+        "clause_label": "3.1",
+        "kind": "paragraph",
+        "original_text": "3.1. Формирует ежемесячный реестр корпоративных рисков.",
+        "normalized_text": "3 1 формирует ежемесячный реестр корпоративных рисков",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_before.docx",
+        "revision": "редакция 8",
+        "file_type": "docx"
+      },
+      "after_source": {
+        "id": "span_f4f066d014b6519fa426",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 12,
+        "locator": "абзац 12",
+        "clause_label": "9.1",
+        "kind": "paragraph",
+        "original_text": "9.1. Формирует ежемесячный реестр корпоративных рисков.",
+        "normalized_text": "9 1 формирует ежемесячный реестр корпоративных рисков",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_6977c3cd03e956e4be15",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "new",
+      "title": "Функция без подтверждённого соответствия в комплекте «До»",
+      "summary": "Лучший кандидат имеет сходство 100%; требуется проверка.",
+      "before_owner": null,
+      "after_owner": "Директор мониторинга",
+      "before_function": null,
+      "after_function": "Формирует ежемесячный реестр корпоративных рисков.",
+      "before_span_id": null,
+      "after_span_id": "span_26eb2c808117526a9d88",
+      "evidence_status": "UNKNOWN",
+      "confidence": 0.0,
+      "limitations": "Это не доказательство впервые созданной функции.",
+      "sort_order": 8,
+      "before_source": null,
+      "after_source": {
+        "id": "span_26eb2c808117526a9d88",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 14,
+        "locator": "абзац 14",
+        "clause_label": "10.1",
+        "kind": "paragraph",
+        "original_text": "10.1. Формирует ежемесячный реестр корпоративных рисков.",
+        "normalized_text": "10 1 формирует ежемесячный реестр корпоративных рисков",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    },
+    {
+      "id": "finding_6c6f1ec15e685bbeb81a",
+      "run_id": "run_40c74735182c4d26",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "finding_type": "possible_duplicate",
+      "title": "Возможное дублирование функций",
+      "summary": "У разных владельцев близки действие, объект и область (сходство 100%).",
+      "before_owner": "Директор отчетности",
+      "after_owner": "Директор мониторинга",
+      "before_function": "Формирует ежемесячный реестр корпоративных рисков.",
+      "after_function": "Формирует ежемесячный реестр корпоративных рисков.",
+      "before_span_id": "span_f4f066d014b6519fa426",
+      "after_span_id": "span_26eb2c808117526a9d88",
+      "evidence_status": "UNKNOWN",
+      "confidence": 1.0,
+      "limitations": "Общие управленческие глаголы сами по себе не доказывают дублирование; требуется проверка границ ответственности.",
+      "sort_order": 9,
+      "before_source": {
+        "id": "span_f4f066d014b6519fa426",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 12,
+        "locator": "абзац 12",
+        "clause_label": "9.1",
+        "kind": "paragraph",
+        "original_text": "9.1. Формирует ежемесячный реестр корпоративных рисков.",
+        "normalized_text": "9 1 формирует ежемесячный реестр корпоративных рисков",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "after_source": {
+        "id": "span_26eb2c808117526a9d88",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "comparison_id": "cmp_71a0ae8bd0d64f07",
+        "side": "after",
+        "ordinal": 14,
+        "locator": "абзац 14",
+        "clause_label": "10.1",
+        "kind": "paragraph",
+        "original_text": "10.1. Формирует ежемесячный реестр корпоративных рисков.",
+        "normalized_text": "10 1 формирует ежемесячный реестр корпоративных рисков",
+        "warnings_json": "[]",
+        "filename": "SYNTHETIC_after.docx",
+        "revision": "редакция 9",
+        "file_type": "docx"
+      },
+      "review": null,
+      "review_history": [],
+      "before_context": [],
+      "after_context": []
+    }
+  ],
+  "trace": [
+    {
+      "id": "trace_8d8f1cd554164b8c",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 1,
+      "tool": "extract_registry",
+      "result": "получено элементов: 2, получено элементов: 4, получено элементов: 4",
+      "status": "ok",
+      "duration_ms": 55,
+      "created_at": "2026-09-23T12:03:44.133053+00:00",
+      "safe_params": {
+        "side": "before"
+      },
+      "source_ids": []
+    },
+    {
+      "id": "trace_68227bdc65e148fb",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 2,
+      "tool": "extract_registry",
+      "result": "получено элементов: 4, получено элементов: 4, получено элементов: 8",
+      "status": "ok",
+      "duration_ms": 89,
+      "created_at": "2026-09-23T12:03:44.231396+00:00",
+      "safe_params": {
+        "side": "after"
+      },
+      "source_ids": []
+    },
+    {
+      "id": "trace_05b9a45276ff45d9",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 3,
+      "tool": "prepare_search_index",
+      "result": "None",
+      "status": "ok",
+      "duration_ms": 0,
+      "created_at": "2026-09-23T12:03:44.237242+00:00",
+      "safe_params": {
+        "mode": "lexical",
+        "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+      },
+      "source_ids": []
+    },
+    {
+      "id": "trace_fe58ec13a2734fea",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 4,
+      "tool": "compare_functions",
+      "result": "получено элементов: 3, {\"fn_45a90974dad359a9ab6b\": [[\"FunctionAssertion(id='fn_92cb2c01fed353c7b0ba', side='after', owner='Директор снабжения', action='контролирует', object='качество закупочной деятельности', scope='общая область', authority='контролирует', text='Контролирует качество закупочной деятельности.', span_id='span_4047e9f7f09c5ac59a76', document_id='doc_c77fd6e9bdea5c32b318', clause_label='7.1', context_span_id=None)\", 1.0], [\"FunctionAssertion(id='fn_9358fc7bafd0553687b3', side='after', owner='Директор от",
+      "status": "ok",
+      "duration_ms": 2,
+      "created_at": "2026-09-23T12:03:44.258144+00:00",
+      "safe_params": {
+        "before_count": 4,
+        "after_count": 4,
+        "threshold": 0.38
+      },
+      "source_ids": []
+    },
+    {
+      "id": "trace_e7689259332743ca",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 5,
+      "tool": "compare_structure",
+      "result": "получено элементов: 4",
+      "status": "ok",
+      "duration_ms": 2,
+      "created_at": "2026-09-23T12:03:44.285522+00:00",
+      "safe_params": {
+        "before_units": 2,
+        "after_units": 4
+      },
+      "source_ids": []
+    },
+    {
+      "id": "trace_9d76b1385c384437",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 6,
+      "tool": "check_coverage",
+      "result": "получено элементов: 5",
+      "status": "ok",
+      "duration_ms": 0,
+      "created_at": "2026-09-23T12:03:44.290866+00:00",
+      "safe_params": {
+        "candidate_depth": 5
+      },
+      "source_ids": []
+    },
+    {
+      "id": "trace_022202a6795d40ba",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 7,
+      "tool": "check_overlap_and_independence",
+      "result": "получено элементов: 1",
+      "status": "ok",
+      "duration_ms": 0,
+      "created_at": "2026-09-23T12:03:44.296401+00:00",
+      "safe_params": {
+        "duplicate_threshold": 0.78,
+        "conflict_object_threshold": 0.68
+      },
+      "source_ids": []
+    },
+    {
+      "id": "trace_1402d7b9b3d646f6",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 8,
+      "tool": "model_review",
+      "result": "{\"mode\": \"offline\", \"reviewed\": 0, \"note\": \"Модельный review не выполнялся\"}",
+      "status": "ok",
+      "duration_ms": 0,
+      "created_at": "2026-09-23T12:03:44.341406+00:00",
+      "safe_params": {
+        "mode": "offline",
+        "model": "gpt-4.1-mini",
+        "finding_count": 10
+      },
+      "source_ids": [
+        "span_38ab9ee7d91d5fe795e7",
+        "span_ef993294f9ac5632875f",
+        "span_51977f10b75f5f1da9e9",
+        "span_34907049d78e5e598c7a",
+        "span_4c622d9e55b95d93bdd8",
+        "span_7a35678dc89954c8ab04",
+        "span_876d3023621957dba0eb",
+        "span_4047e9f7f09c5ac59a76",
+        "span_8cbad6cfaf715f5cbd1c",
+        "span_26bccf6cc7225576ab30",
+        "span_1124cb08f2dd524ea35a",
+        "span_13209772d49e53bb8efc",
+        "span_f4f066d014b6519fa426",
+        "span_26eb2c808117526a9d88",
+        "span_f4f066d014b6519fa426",
+        "span_26eb2c808117526a9d88"
+      ]
+    },
+    {
+      "id": "trace_61df4db32a12410b",
+      "run_id": "run_40c74735182c4d26",
+      "sequence": 9,
+      "tool": "resolve_sources",
+      "result": "{\"checked\": 16}",
+      "status": "ok",
+      "duration_ms": 37,
+      "created_at": "2026-09-23T12:03:44.384208+00:00",
+      "safe_params": {
+        "finding_count": 10
+      },
+      "source_ids": [
+        "span_38ab9ee7d91d5fe795e7",
+        "span_ef993294f9ac5632875f",
+        "span_51977f10b75f5f1da9e9",
+        "span_34907049d78e5e598c7a",
+        "span_4c622d9e55b95d93bdd8",
+        "span_7a35678dc89954c8ab04",
+        "span_876d3023621957dba0eb",
+        "span_4047e9f7f09c5ac59a76",
+        "span_8cbad6cfaf715f5cbd1c",
+        "span_26bccf6cc7225576ab30",
+        "span_1124cb08f2dd524ea35a",
+        "span_13209772d49e53bb8efc",
+        "span_f4f066d014b6519fa426",
+        "span_26eb2c808117526a9d88",
+        "span_f4f066d014b6519fa426",
+        "span_26eb2c808117526a9d88"
+      ]
+    }
+  ],
+  "summary": {
+    "structure_transformed": 1,
+    "structure_preserved": 1,
+    "structure_added": 2,
+    "transferred": 2,
+    "potential_loss": 1,
+    "preserved": 1,
+    "new": 1,
+    "possible_duplicate": 1
+  },
+  "documents": [
+    {
+      "id": "doc_c77fd6e9bdea5c32b318",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "side": "after",
+      "filename": "SYNTHETIC_after.docx",
+      "revision": "редакция 9",
+      "file_type": "docx",
+      "sha256": "a855d96067222a8cfb3104190b057b12481bd1028eeed09dbf401734cefc3d1d",
+      "status": "ready",
+      "created_at": "2026-09-23T12:03:44.028930+00:00",
+      "warnings": [],
+      "span_count": 14
+    },
+    {
+      "id": "doc_6d0fe8a2d9e25c89be99",
+      "comparison_id": "cmp_71a0ae8bd0d64f07",
+      "side": "before",
+      "filename": "SYNTHETIC_before.docx",
+      "revision": "редакция 8",
+      "file_type": "docx",
+      "sha256": "49cbcfa6a489bbff77b41c535b4ce536cb5b5c4af4fa691e59c890acc0c5e7d9",
+      "status": "ready",
+      "created_at": "2026-09-23T12:03:44.001278+00:00",
+      "warnings": [],
+      "span_count": 9
+    }
+  ],
+  "metadata": {
+    "incomplete_documents": [],
+    "algorithm_version": "audit-v3",
+    "source_sha256": "f7fc1c263acf92aec80768590aaa266f55b3832a751e9e52273894831ffae556",
+    "release": "working-tree",
+    "packages": {
+      "fastapi": "0.141.1",
+      "starlette": "1.7.0",
+      "pypdf": "5.4.0",
+      "openpyxl": "3.1.5",
+      "openai": "1.75.0",
+      "fastembed": "0.7.4"
+    },
+    "prompt_version": "live-schema-v2",
+    "embedding_revision": "upstream model; weights not commit-pinned",
+    "semantic_determinism": "New model responses are not guaranteed identical; stored run snapshots are fixed.",
+    "function_ids": [
+      "fn_45a90974dad359a9ab6b",
+      "fn_523642300cfb52a88914",
+      "fn_ff408fe45a2d51fcb2fa",
+      "fn_812ce9bdba6552889c37",
+      "fn_92cb2c01fed353c7b0ba",
+      "fn_8e673158f41a5df7a0d0",
+      "fn_9358fc7bafd0553687b3",
+      "fn_f9e18e5e39ff5efab8b1"
+    ],
+    "functions": [
+      {
+        "id": "fn_45a90974dad359a9ab6b",
+        "side": "before",
+        "owner": "Директор закупок",
+        "action": "контролирует",
+        "object": "качество закупочной деятельности",
+        "scope": "общая область",
+        "authority": "контролирует",
+        "text": "Контролирует качество закупочной деятельности.",
+        "span_id": "span_876d3023621957dba0eb",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "clause_label": "2.1",
+        "context_span_id": null,
+        "object_text": "качество закупочной деятельности",
+        "assertion_text": "Контролирует качество закупочной деятельности."
+      },
+      {
+        "id": "fn_523642300cfb52a88914",
+        "side": "before",
+        "owner": "Директор закупок",
+        "action": "формирует",
+        "object": "график обучения сотрудников",
+        "scope": "общая область",
+        "authority": "исполняет",
+        "text": "Формирует график обучения сотрудников.",
+        "span_id": "span_8cbad6cfaf715f5cbd1c",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "clause_label": "2.2",
+        "context_span_id": null,
+        "object_text": "график обучения сотрудников",
+        "assertion_text": "Формирует график обучения сотрудников."
+      },
+      {
+        "id": "fn_ff408fe45a2d51fcb2fa",
+        "side": "before",
+        "owner": "Директор закупок",
+        "action": "хранит",
+        "object": "резервные копии архива договоров",
+        "scope": "общая область",
+        "authority": "исполняет",
+        "text": "Хранит резервные копии архива договоров.",
+        "span_id": "span_1124cb08f2dd524ea35a",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "clause_label": "2.3",
+        "context_span_id": null,
+        "object_text": "резервные копии архива договоров",
+        "assertion_text": "Хранит резервные копии архива договоров."
+      },
+      {
+        "id": "fn_812ce9bdba6552889c37",
+        "side": "before",
+        "owner": "Директор отчетности",
+        "action": "формирует",
+        "object": "ежемесячный реестр корпоративных рисков",
+        "scope": "рисков",
+        "authority": "исполняет",
+        "text": "Формирует ежемесячный реестр корпоративных рисков.",
+        "span_id": "span_13209772d49e53bb8efc",
+        "document_id": "doc_6d0fe8a2d9e25c89be99",
+        "clause_label": "3.1",
+        "context_span_id": null,
+        "object_text": "ежемесячный реестр корпоративных рисков",
+        "assertion_text": "Формирует ежемесячный реестр корпоративных рисков."
+      },
+      {
+        "id": "fn_92cb2c01fed353c7b0ba",
+        "side": "after",
+        "owner": "Директор снабжения",
+        "action": "контролирует",
+        "object": "качество закупочной деятельности",
+        "scope": "общая область",
+        "authority": "контролирует",
+        "text": "Контролирует качество закупочной деятельности.",
+        "span_id": "span_4047e9f7f09c5ac59a76",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "clause_label": "7.1",
+        "context_span_id": null,
+        "object_text": "качество закупочной деятельности",
+        "assertion_text": "Контролирует качество закупочной деятельности."
+      },
+      {
+        "id": "fn_8e673158f41a5df7a0d0",
+        "side": "after",
+        "owner": "Руководитель обучения",
+        "action": "формирует",
+        "object": "график обучения сотрудников",
+        "scope": "общая область",
+        "authority": "исполняет",
+        "text": "Формирует график обучения сотрудников.",
+        "span_id": "span_26bccf6cc7225576ab30",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "clause_label": "8.1",
+        "context_span_id": null,
+        "object_text": "график обучения сотрудников",
+        "assertion_text": "Формирует график обучения сотрудников."
+      },
+      {
+        "id": "fn_9358fc7bafd0553687b3",
+        "side": "after",
+        "owner": "Директор отчетности",
+        "action": "формирует",
+        "object": "ежемесячный реестр корпоративных рисков",
+        "scope": "рисков",
+        "authority": "исполняет",
+        "text": "Формирует ежемесячный реестр корпоративных рисков.",
+        "span_id": "span_f4f066d014b6519fa426",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "clause_label": "9.1",
+        "context_span_id": null,
+        "object_text": "ежемесячный реестр корпоративных рисков",
+        "assertion_text": "Формирует ежемесячный реестр корпоративных рисков."
+      },
+      {
+        "id": "fn_f9e18e5e39ff5efab8b1",
+        "side": "after",
+        "owner": "Директор мониторинга",
+        "action": "формирует",
+        "object": "ежемесячный реестр корпоративных рисков",
+        "scope": "рисков",
+        "authority": "исполняет",
+        "text": "Формирует ежемесячный реестр корпоративных рисков.",
+        "span_id": "span_26eb2c808117526a9d88",
+        "document_id": "doc_c77fd6e9bdea5c32b318",
+        "clause_label": "10.1",
+        "context_span_id": null,
+        "object_text": "ежемесячный реестр корпоративных рисков",
+        "assertion_text": "Формирует ежемесячный реестр корпоративных рисков."
+      }
+    ],
+    "search_mode": "lexical",
+    "embedding_model": null,
+    "coverage": {
+      "fn_45a90974dad359a9ab6b": {
+        "examined_functions": 4,
+        "eligible_candidates": 4,
+        "top_candidates": [
+          {
+            "function_id": "fn_92cb2c01fed353c7b0ba",
+            "source_id": "span_4047e9f7f09c5ac59a76",
+            "score": 1.0
+          },
+          {
+            "function_id": "fn_9358fc7bafd0553687b3",
+            "source_id": "span_f4f066d014b6519fa426",
+            "score": 0.0175
+          },
+          {
+            "function_id": "fn_f9e18e5e39ff5efab8b1",
+            "source_id": "span_26eb2c808117526a9d88",
+            "score": 0.0175
+          },
+          {
+            "function_id": "fn_8e673158f41a5df7a0d0",
+            "source_id": "span_26bccf6cc7225576ab30",
+            "score": 0.0
+          }
+        ]
+      },
+      "fn_523642300cfb52a88914": {
+        "examined_functions": 4,
+        "eligible_candidates": 4,
+        "top_candidates": [
+          {
+            "function_id": "fn_8e673158f41a5df7a0d0",
+            "source_id": "span_26bccf6cc7225576ab30",
+            "score": 1.0
+          },
+          {
+            "function_id": "fn_9358fc7bafd0553687b3",
+            "source_id": "span_f4f066d014b6519fa426",
+            "score": 0.1506
+          },
+          {
+            "function_id": "fn_f9e18e5e39ff5efab8b1",
+            "source_id": "span_26eb2c808117526a9d88",
+            "score": 0.1506
+          },
+          {
+            "function_id": "fn_92cb2c01fed353c7b0ba",
+            "source_id": "span_4047e9f7f09c5ac59a76",
+            "score": 0.0
+          }
+        ]
+      },
+      "fn_ff408fe45a2d51fcb2fa": {
+        "examined_functions": 4,
+        "eligible_candidates": 4,
+        "top_candidates": [
+          {
+            "function_id": "fn_9358fc7bafd0553687b3",
+            "source_id": "span_f4f066d014b6519fa426",
+            "score": 0.0175
+          },
+          {
+            "function_id": "fn_f9e18e5e39ff5efab8b1",
+            "source_id": "span_26eb2c808117526a9d88",
+            "score": 0.0175
+          },
+          {
+            "function_id": "fn_92cb2c01fed353c7b0ba",
+            "source_id": "span_4047e9f7f09c5ac59a76",
+            "score": 0.0
+          },
+          {
+            "function_id": "fn_8e673158f41a5df7a0d0",
+            "source_id": "span_26bccf6cc7225576ab30",
+            "score": 0.0
+          }
+        ]
+      },
+      "fn_812ce9bdba6552889c37": {
+        "examined_functions": 4,
+        "eligible_candidates": 4,
+        "top_candidates": [
+          {
+            "function_id": "fn_9358fc7bafd0553687b3",
+            "source_id": "span_f4f066d014b6519fa426",
+            "score": 1.0
+          },
+          {
+            "function_id": "fn_f9e18e5e39ff5efab8b1",
+            "source_id": "span_26eb2c808117526a9d88",
+            "score": 1.0
+          },
+          {
+            "function_id": "fn_8e673158f41a5df7a0d0",
+            "source_id": "span_26bccf6cc7225576ab30",
+            "score": 0.1506
+          },
+          {
+            "function_id": "fn_92cb2c01fed353c7b0ba",
+            "source_id": "span_4047e9f7f09c5ac59a76",
+            "score": 0.0175
+          }
+        ]
+      }
+    },
+    "extraction_warnings": [],
+    "api_usage": {
+      "requests": 0,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "model_review": {
+      "mode": "offline",
+      "reviewed": 0,
+      "note": "Модельный review не выполнялся"
+    }
+  },
+  "model_review": {
+    "mode": "offline",
+    "reviewed": 0,
+    "note": "Модельный review не выполнялся"
+  },
+  "registry": {
+    "before_units": [
+      {
+        "name": "Отдел закупок",
+        "abbreviation": null,
+        "span_id": "span_38ab9ee7d91d5fe795e7"
+      },
+      {
+        "name": "Отдел отчетности",
+        "abbreviation": null,
+        "span_id": "span_51977f10b75f5f1da9e9"
+      }
+    ],
+    "after_units": [
+      {
+        "name": "Отдел снабжения",
+        "abbreviation": null,
+        "span_id": "span_7ac0a297aaf25949b290"
+      },
+      {
+        "name": "Отдел отчетности",
+        "abbreviation": null,
+        "span_id": "span_34907049d78e5e598c7a"
+      },
+      {
+        "name": "Отдел обучения",
+        "abbreviation": null,
+        "span_id": "span_7a35678dc89954c8ab04"
+      },
+      {
+        "name": "Отдел мониторинга",
+        "abbreviation": null,
+        "span_id": "span_4c622d9e55b95d93bdd8"
+      }
+    ],
+    "before_roles": [
+      {
+        "name": "Отдел закупок",
+        "span_id": "span_38ab9ee7d91d5fe795e7"
+      },
+      {
+        "name": "Отдел отчетности",
+        "span_id": "span_51977f10b75f5f1da9e9"
+      },
+      {
+        "name": "Директор закупок",
+        "span_id": "span_f17fda61b398547295cc"
+      },
+      {
+        "name": "Директор отчетности",
+        "span_id": "span_14be6e2b9da45fd9b612"
+      }
+    ],
+    "after_roles": [
+      {
+        "name": "Отдел снабжения",
+        "span_id": "span_7ac0a297aaf25949b290"
+      },
+      {
+        "name": "Отдел отчетности",
+        "span_id": "span_34907049d78e5e598c7a"
+      },
+      {
+        "name": "Отдел обучения",
+        "span_id": "span_7a35678dc89954c8ab04"
+      },
+      {
+        "name": "Отдел мониторинга",
+        "span_id": "span_4c622d9e55b95d93bdd8"
+      },
+      {
+        "name": "Директор снабжения",
+        "span_id": "span_2939a9860b7d522ebea0"
+      },
+      {
+        "name": "Руководитель обучения",
+        "span_id": "span_1d19f7e8f0f15f0ea916"
+      },
+      {
+        "name": "Директор отчетности",
+        "span_id": "span_c4ad28ef0a185490a3c1"
+      },
+      {
+        "name": "Директор мониторинга",
+        "span_id": "span_3dc5c6d825b652b5a913"
+      }
+    ]
+  }
+}

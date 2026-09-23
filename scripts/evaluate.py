@@ -15,6 +15,8 @@ _evaluation_state = tempfile.TemporaryDirectory(prefix='baqbaq-probe-')
 os.environ['BAQBAQ_DB_PATH'] = str(Path(_evaluation_state.name) / 'probe.db')
 os.environ['BAQBAQ_UPLOAD_DIR'] = str(Path(_evaluation_state.name) / 'uploads')
 os.environ['BAQBAQ_MODEL_MODE'] = 'offline'
+os.environ['BAQBAQ_AUTH_PASSWORD_HASH'] = ''
+os.environ['BAQBAQ_AUTH_SECRET'] = ''
 
 from fastapi.testclient import TestClient
 

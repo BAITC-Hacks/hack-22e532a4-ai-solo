@@ -20,6 +20,10 @@ def stable_id(namespace: str, *parts: str) -> str:
     return f"{namespace}_{uuid.uuid5(uuid.NAMESPACE_URL, value).hex[:20]}"
 
 
+class AnalysisBusy(ValueError):
+    pass
+
+
 class Store:
     def __init__(self, path: Path):
         self.path = Path(path)
@@ -56,6 +60,11 @@ class Store:
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS comparison_access (
+                    comparison_id TEXT PRIMARY KEY REFERENCES comparisons(id) ON DELETE CASCADE,
+                    owner_key TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_comparison_owner ON comparison_access(owner_key);
                 CREATE TABLE IF NOT EXISTS run_snapshots (
                     run_id TEXT PRIMARY KEY REFERENCES analysis_runs(id),
                     documents_json TEXT NOT NULL,
@@ -227,13 +236,23 @@ class Store:
             row = db.execute("SELECT * FROM comparisons WHERE id=?", (cid,)).fetchone()
             return dict(row), True
 
-    def list_comparisons(self) -> list[dict[str, Any]]:
+    def bind_comparison(self, comparison_id: str, owner_key: str) -> None:
+        with self.connect() as db:
+            db.execute('INSERT INTO comparison_access VALUES (?,?)',(comparison_id,owner_key))
+
+    def owns_comparison(self, comparison_id: str, owner_key: str) -> bool:
+        with self.connect() as db:
+            return db.execute('SELECT 1 FROM comparison_access WHERE comparison_id=? AND owner_key=?',(comparison_id,owner_key)).fetchone() is not None
+
+    def list_comparisons(self, owner_key: str | None = None) -> list[dict[str, Any]]:
         with self.connect() as db:
             rows = db.execute(
                 """SELECT c.*,
                 (SELECT count(*) FROM document_versions d WHERE d.comparison_id=c.id AND d.side='before') before_count,
                 (SELECT count(*) FROM document_versions d WHERE d.comparison_id=c.id AND d.side='after') after_count
-                FROM comparisons c ORDER BY c.created_at DESC"""
+                FROM comparisons c WHERE (? IS NULL OR EXISTS
+                (SELECT 1 FROM comparison_access a WHERE a.comparison_id=c.id AND a.owner_key=?))
+                ORDER BY c.created_at DESC""", (owner_key,owner_key)
             ).fetchall()
             return [dict(row) for row in rows]
 
@@ -366,6 +385,9 @@ class Store:
     def begin_run(self, comparison_id: str, model_mode: str, model: str, input_hash: str) -> str:
         run_id = f"run_{uuid.uuid4().hex[:16]}"
         with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            if db.execute("SELECT 1 FROM analysis_runs WHERE comparison_id=? AND status='running'", (comparison_id,)).fetchone():
+                raise AnalysisBusy('Анализ этого сравнения уже выполняется. Дождитесь результата.')
             db.execute(
                 """INSERT INTO analysis_runs
                 (id,comparison_id,status,model_mode,model,prompt_version,input_hash,started_at)
@@ -376,6 +398,15 @@ class Store:
             # Re-extraction uses deterministic IDs and upserts instead of deleting history.
         self.set_comparison_status(comparison_id, "analyzing")
         return run_id
+
+    def recover_interrupted_runs(self):
+        """Single-worker service startup: preserve interrupted runs, never pretend completion."""
+        with self.connect() as db:
+            rows = db.execute("SELECT DISTINCT comparison_id FROM analysis_runs WHERE status='running'").fetchall()
+            db.execute("UPDATE analysis_runs SET status='failed',completed_at=?,error=? WHERE status='running'",
+                       (utcnow(), 'Процесс был перезапущен до завершения анализа. Создайте новый запуск.'))
+            for row in rows:
+                db.execute("UPDATE comparisons SET status='error' WHERE id=?", (row[0],))
 
     def finish_run(self, run_id: str, status: str, error: str | None = None) -> None:
         with self.connect() as db:
@@ -569,9 +600,16 @@ class Store:
             counts[item["finding_type"]] = counts.get(item["finding_type"], 0) + 1
         with self.connect() as db:
             snapshot = db.execute('SELECT * FROM run_snapshots WHERE run_id=?', (run['id'],)).fetchone()
+        metadata = json.loads(snapshot['metadata_json']) if snapshot else {}
+        functions = metadata.get('functions', [])
+        for finding in findings:
+            for side in ('before', 'after'):
+                context_ids = {f.get('context_span_id') for f in functions
+                               if f['span_id'] == finding.get(side+'_span_id') and f.get('context_span_id')}
+                finding[side+'_context'] = [self.get_span(sid, comparison_id) for sid in sorted(context_ids)]
         return {"run": run, "findings": findings, "trace": trace, "summary": counts,
                 'documents': json.loads(snapshot['documents_json']) if snapshot else [],
-                'metadata': json.loads(snapshot['metadata_json']) if snapshot else {}}
+                'metadata': metadata}
 
     def save_review(self, finding_id: str, decision: str, note: str) -> dict[str, Any]:
         rid = f"review_{uuid.uuid4().hex[:16]}"

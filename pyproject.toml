@@ -4,11 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "baqbaq"
-version = "0.1.0"
+version = "0.3.0"
 description = "Explainable AI agent for organizational document comparison"
 requires-python = ">=3.11"
 dependencies = [
-  "fastapi==0.115.12",
+  "fastapi==0.141.1",
+  "starlette==1.7.0",
   "uvicorn[standard]==0.34.2",
   "python-multipart==0.0.20",
   "pypdf==5.4.0",

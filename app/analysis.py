@@ -10,7 +10,7 @@ from typing import Any, Callable
 from .db import Store, stable_id
 from .domain import CandidateMatch, FunctionAssertion
 from .model_adapter import ModelAdapter, ModelError
-from .semantic import authority, best_action, has_action, object_and_scope, scope_conflicts, similarity, tokens
+from .semantic import authority, best_action, has_action, object_and_scope, scope_conflicts, similarity, tokens, semantic_guards
 
 
 from .registry import extract_units_and_functions
@@ -35,10 +35,11 @@ def match_functions(before: list[FunctionAssertion], after: list[FunctionAsserti
         if score < 0.38:
             continue
         same_owner = _owner_key(old.owner) == _owner_key(new.owner)
-        relation = "preserved" if score >= 0.94 and same_owner else "changed" if same_owner else "transferred"
+        qualifiers_changed = semantic_guards(old.text) != semantic_guards(new.text)
+        relation = "changed" if qualifiers_changed else "preserved" if score >= 0.94 and same_owner else "changed" if same_owner else "transferred"
         old_words = set(tokens(old.object))
         components = [(fn, value) for fn, value in ranked[:5] if value >= .38 and len(old_words & set(tokens(fn.object))) >= 2]
-        if len(components) >= 2 and score < .8:
+        if not qualifiers_changed and len(components) >= 2 and score < .8:
             left_words, right_words = [set(tokens(fn.object)) & old_words for fn, _ in components[:2]]
             if left_words - right_words and right_words - left_words:
                 matches.extend(CandidateMatch(old, fn, value, 'split') for fn, value in components[:2])
@@ -50,7 +51,7 @@ def match_functions(before: list[FunctionAssertion], after: list[FunctionAsserti
     for group in targets.values():
         if len({m.before.text for m in group}) > 1:
             for match in group:
-                if match.relation != 'split' and match.score < .94:
+                if match.relation != 'split' and match.score < .94 and semantic_guards(match.before.text) == semantic_guards(match.after.text):
                     match.relation = 'merged'
     return matches, candidates
 
@@ -174,6 +175,8 @@ def _overlap_findings(after: list[FunctionAssertion]) -> list[dict[str, Any]]:
     conflicts: list[dict[str, Any]] = []
     for index, left in enumerate(after):
         for right in after[index + 1 :]:
+            if semantic_guards(left.text)['negated'] or semantic_guards(right.text)['negated']:
+                continue
             same_owner = _owner_key(left.owner) == _owner_key(right.owner)
             if "не установлен" in {_owner_key(left.owner), _owner_key(right.owner)}:
                 continue
@@ -233,12 +236,12 @@ class Analyzer:
         ready_after = [doc for doc in docs if doc["side"] == "after" and doc["status"] == "ready"]
         if not ready_before or not ready_after:
             raise ValueError("Для анализа нужен хотя бы один успешно разобранный документ в каждом комплекте")
-        input_hash = hashlib.sha256(
-            "|".join(sorted(doc["sha256"] for doc in docs)).encode()
-        ).hexdigest()
+        manifest = sorted((doc['side'], doc['sha256'], doc['revision']) for doc in docs)
+        input_hash = hashlib.sha256(json.dumps(manifest, ensure_ascii=False).encode()).hexdigest()
         run_id = self.store.begin_run(comparison_id, self.model.mode, self.model.model, input_hash)
         unread = [doc for doc in docs if doc['status'] != 'ready' or doc.get('warnings')]
-        metadata = {'incomplete_documents': [doc['filename'] for doc in unread], 'algorithm_version': 'audit-v2'}
+        from .provenance import runtime_manifest
+        metadata = {'incomplete_documents': [doc['filename'] for doc in unread], **runtime_manifest()}
         self.store.snapshot_run(run_id, docs, metadata)
         sequence = 0
 
@@ -271,6 +274,7 @@ class Analyzer:
                     lambda:self.model.extract_functions(self.store,comparison_id,'after'))
             index = SearchIndex(self.store)
             metadata['function_ids'] = [f.id for f in before_functions + after_functions]
+            metadata['functions'] = [dict(f.to_dict(), object_text=f.object, assertion_text=f.text) for f in before_functions + after_functions]
             traced('prepare_search_index', {'mode': index.mode, 'model': index.model_name},
                    lambda: index.prepare([fn.text for fn in before_functions + after_functions]))
             metadata['search_mode'] = index.mode
@@ -304,7 +308,8 @@ class Analyzer:
                 for old in before_functions}
             self.store.snapshot_run(run_id, docs, metadata)
             findings = structure + functional + overlap
-            incomplete = bool(unread) or not before_functions or not after_functions
+            metadata['extraction_warnings'] = self.model.extraction_warnings
+            incomplete = bool(unread) or bool(self.model.extraction_warnings) or not before_functions or not after_functions
             if incomplete:
                 for finding in findings:
                     if finding['type'] in {'potential_loss', 'new', 'structure_added'}:
@@ -314,7 +319,7 @@ class Analyzer:
                         finding['type'] = 'insufficient_data'
                         finding['title'] = 'Недостаточно данных для проверки покрытия функции'
                 findings.insert(0, {'type': 'insufficient_data', 'title': 'Анализ неполного комплекта',
-                    'summary': 'Есть непрочитанные документы либо на одной стороне не извлечены функции.',
+                    'summary': 'Есть непрочитанные документы, недостаток функций либо отклонённые модельные утверждения. Подробности в паспорте запуска.',
                     'evidence_status': 'UNKNOWN', 'confidence': 0,
                     'limitations': 'Нельзя трактовать отсутствие результатов как отсутствие рисков. ' + '; '.join(metadata['incomplete_documents'])})
             source_ids = [
@@ -339,8 +344,11 @@ class Analyzer:
             )
             for order, finding in enumerate(findings):
                 self.store.add_finding(run_id, comparison_id, finding, order)
+            metadata['api_usage'] = self.model.usage
+            metadata['model_review'] = model_review
+            self.store.snapshot_run(run_id, docs, metadata)
             self.store.finish_run(run_id, "partial" if incomplete else "completed")
-            result = self.store.analysis_result(comparison_id)
+            result = self.store.analysis_result(comparison_id, run_id)
             result["model_review"] = model_review
             result["registry"] = {
                 "before_units": before_units,
@@ -350,6 +358,8 @@ class Analyzer:
             }
             return result
         except Exception as exc:
+            metadata['api_usage'] = self.model.usage
+            self.store.snapshot_run(run_id, docs, metadata)
             self.store.finish_run(run_id, "failed", str(exc))
             raise
 

@@ -58,8 +58,10 @@ class SearchIndex:
         semantic = max(0., (cosine - .35) / .65)
         return round(max(lexical, .55 * lexical + .45 * semantic), 4)
 
-    def search(self, comparison_id, query, limit=8):
+    def search(self, comparison_id, query, limit=8, document_ids=None):
         spans = self.store.get_spans(comparison_id)
+        if document_ids is not None:
+            spans = [span for span in spans if span['document_id'] in document_ids]
         self.prepare([query] + [s['original_text'] for s in spans])
         ranked = sorted(((self.score(query, s['original_text']), s) for s in spans), key=lambda x:x[0], reverse=True)
         return [dict(s, retrieval_score=score) for score, s in ranked[:limit] if score > .1]

@@ -9,7 +9,13 @@ def document_bytes(lines, format='docx'):
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, 'w') as archive:
             body = ''.join(f'<w:p><w:r><w:t>{escape(line)}</w:t></w:r></w:p>' for line in lines)
-            archive.writestr('word/document.xml', '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+body+'</w:body></w:document>')
+            parts = {
+                '[Content_Types].xml':'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>',
+                '_rels/.rels':'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>',
+                'word/document.xml':'<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+body+'<w:sectPr/></w:body></w:document>',
+            }
+            for name, content in parts.items():
+                archive.writestr(zipfile.ZipInfo(name, date_time=(2026,9,23,13,0,0)), content)
         return buf.getvalue()
     if format == 'xlsx':
         from openpyxl import Workbook
@@ -43,9 +49,16 @@ def document_bytes(lines, format='docx'):
     raise ValueError(format)
 
 
-DEMO_BEFORE = ['1. Отдел закупок.', '2. Директор закупок:',
-               '2.1. Контролирует качество закупочной деятельности.',
-               '2.2. Формирует график обучения сотрудников.']
-DEMO_AFTER = ['1. Отдел закупок.', '1.1. Отдел обучения.', '7. Директор контроля:',
-              '7.1. Контролирует качество закупочной деятельности.',
-              '8. Руководитель обучения:', '8.1. Формирует график обучения сотрудников.']
+DEMO_BEFORE = ['Синтетическое учебное положение. Редакция 8.',
+    '1. Отдел закупок.', '1.1. Отдел отчетности.', '2. Директор закупок:',
+    '2.1. Контролирует качество закупочной деятельности.',
+    '2.2. Формирует график обучения сотрудников.',
+    '2.3. Хранит резервные копии архива договоров.',
+    '3. Директор отчетности:', '3.1. Формирует ежемесячный реестр корпоративных рисков.']
+DEMO_AFTER = ['Синтетическое учебное положение. Редакция 9.',
+    '1. Отдел снабжения.', '1.1. Отдел отчетности.', '1.2. Отдел обучения.', '1.3. Отдел мониторинга.',
+    '1.4. Переименовать Отдел закупок в Отдел снабжения.',
+    '7. Директор снабжения:', '7.1. Контролирует качество закупочной деятельности.',
+    '8. Руководитель обучения:', '8.1. Формирует график обучения сотрудников.',
+    '9. Директор отчетности:', '9.1. Формирует ежемесячный реестр корпоративных рисков.',
+    '10. Директор мониторинга:', '10.1. Формирует ежемесячный реестр корпоративных рисков.']

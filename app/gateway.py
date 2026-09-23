@@ -32,6 +32,7 @@ class Gateway:
         self.documents = snapshot.get('documents') or store.list_documents(comparison_id)
         self.document_ids = {d['id'] for d in self.documents}
         self.function_ids = set(snapshot.get('metadata', {}).get('function_ids', []))
+        self.functions = snapshot.get('metadata', {}).get('functions')
 
     def _source(self, sid):
         span = self.store.get_span(sid, self.comparison_id)
@@ -49,11 +50,16 @@ class Gateway:
             if name == 'read_source':
                 result = self._source(value)
             elif name == 'search_sources':
-                result = self.index.search(self.comparison_id, value)
+                result = self.index.search(self.comparison_id, value, document_ids=self.document_ids)
                 result = [self._source(s['id']) for s in result if s['document_id'] in self.document_ids]
             elif name == 'find_functions':
-                with self.store.connect() as db:
-                    functions = [dict(r) for r in db.execute('SELECT * FROM function_assertions WHERE comparison_id=?', (self.comparison_id,))]
+                if self.functions is not None:
+                    functions = self.functions
+                elif self.run_id:
+                    raise ValueError('Старый запуск не содержит снимок реестра. Исторический поиск функций недоступен; создайте новый запуск.')
+                else:
+                    with self.store.connect() as db:
+                        functions = [dict(r) for r in db.execute('SELECT * FROM function_assertions WHERE comparison_id=?', (self.comparison_id,))]
                 functions = [f for f in functions if f['document_id'] in self.document_ids and (not self.function_ids or f['id'] in self.function_ids)]
                 result = sorted(functions, key=lambda f:similarity(value, f['assertion_text']), reverse=True)[:10]
                 for fn in result:
@@ -77,8 +83,14 @@ class Gateway:
                           'limitation': 'Проверен загруженный комплект; сходство не доказывает эквивалентность.'}
             elif name == 'get_analysis':
                 data = self.store.analysis_result(self.comparison_id, self.run_id)
+                findings = data['findings']
+                if value:
+                    findings = sorted(findings, key=lambda f:similarity(value, f['title']+' '+f['summary']), reverse=True)
+                else:
+                    findings = sorted(findings, key=lambda f:f['finding_type'] not in {'potential_loss','possible_duplicate','potential_conflict','insufficient_data','changed'})
                 result = {'run': data['run'], 'summary': data['summary'], 'findings': [
-                    {k:f[k] for k in ('id','title','summary','evidence_status','before_span_id','after_span_id')} for f in data['findings'][:40]]}
+                    {k:f[k] for k in ('id','title','summary','evidence_status','before_span_id','after_span_id')} for f in findings[:40]],
+                    'total':len(findings), 'returned':min(40,len(findings)), 'truncated':len(findings)>40}
             else:
                 raise ValueError('Неизвестный инструмент')
             event['status'] = 'ok'

@@ -1,7 +1,7 @@
 {
   "dataset_sha256": "f90483bb97964815746323616b886c259b08a61efd52a28cde6fac60fc2f40eb",
-  "timestamp_utc": "2026-09-23T09:58:36.425071+00:00",
-  "git_revision": "10fe54469dc7d635ade3a4e48c82765266667f6e",
+  "timestamp_utc": "2026-09-23T11:52:52.217856+00:00",
+  "git_revision": "380845b9a8baefb5a32a711594cb036dfbe5bb06",
   "git_dirty": true,
   "mode": "offline",
   "search_mode": "lexical",
@@ -32,8 +32,8 @@
       "run_status": "partial",
       "sources": [
         {
-          "id": "span_6353788290c055b4a749",
-          "document_id": "doc_4a8a294b975d5f65b6b4",
+          "id": "span_533778181ead5a89b979",
+          "document_id": "doc_679ee3dd31ed5428b213",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -42,8 +42,8 @@
           "original_text": "1. Отдел закупок."
         },
         {
-          "id": "span_969dc4ad7f6a55a09811",
-          "document_id": "doc_2c2951439a595f4ba9c4",
+          "id": "span_36eef4038a8e5e54af29",
+          "document_id": "doc_cdf698df8e4b59aab29c",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -80,8 +80,8 @@
       "run_status": "partial",
       "sources": [
         {
-          "id": "span_7dc1129e19275c2fa46c",
-          "document_id": "doc_8679c13354ef502a92e8",
+          "id": "span_be80a84af0415e3c9934",
+          "document_id": "doc_97f2c9f0a1965b8ba5f8",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -90,8 +90,8 @@
           "original_text": "1. Отдел закупок."
         },
         {
-          "id": "span_31bbb08b20a85c9daae3",
-          "document_id": "doc_e92cf2ee6e6f5b8c9bd9",
+          "id": "span_c815ef186df651d296e2",
+          "document_id": "doc_0d350d6971b15ce28d87",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -100,8 +100,8 @@
           "original_text": "1. Отдел закупок."
         },
         {
-          "id": "span_c2c0124bc2a15127b925",
-          "document_id": "doc_e92cf2ee6e6f5b8c9bd9",
+          "id": "span_d53a914433e05c9486d3",
+          "document_id": "doc_0d350d6971b15ce28d87",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -138,8 +138,8 @@
       "run_status": "partial",
       "sources": [
         {
-          "id": "span_1f467055563e5d4b9af4",
-          "document_id": "doc_2ba10bb7f3ff502c909a",
+          "id": "span_9d23e634711b5e55962f",
+          "document_id": "doc_13e769306c165ba49c10",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -148,8 +148,8 @@
           "original_text": "1. Отдел закупок."
         },
         {
-          "id": "span_85872d940c7e5147b561",
-          "document_id": "doc_daf7a7c22acc5ea7b846",
+          "id": "span_25e34ff82ba15c189018",
+          "document_id": "doc_40a037866316543f89e1",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -158,8 +158,8 @@
           "original_text": "1. Отдел закупок."
         },
         {
-          "id": "span_90855685203b5e00be70",
-          "document_id": "doc_2ba10bb7f3ff502c909a",
+          "id": "span_3e4828fe2bbd5459bec4",
+          "document_id": "doc_13e769306c165ba49c10",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -196,8 +196,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_dd90d0f79f9e59859309",
-          "document_id": "doc_cacb737f8bfe59c39bbb",
+          "id": "span_c0a5116473c25b9caecf",
+          "document_id": "doc_d70e723c0e1c5d36a07d",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -206,8 +206,8 @@
           "original_text": "2.1. Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_7d6192fa3ef75d16aa5a",
-          "document_id": "doc_a645e5d3e1925c3394fd",
+          "id": "span_b7b8eaa508bc586192d0",
+          "document_id": "doc_f5dcd783cda95e8b88f3",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -246,8 +246,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_2753ce1e24fc5579b0a2",
-          "document_id": "doc_53e9602d0280584ba2ea",
+          "id": "span_bfaebc8396ce507b902e",
+          "document_id": "doc_fb75192ea9cc52a68c41",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -256,8 +256,8 @@
           "original_text": "2.1. Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_d879123aa52b51c9bd0f",
-          "document_id": "doc_66eb1dc279e755eeb565",
+          "id": "span_169e799886de5e0ebc7a",
+          "document_id": "doc_4b160f68a53c52bbb2c5",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -296,8 +296,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_0f0942075c535fdaba98",
-          "document_id": "doc_4ab84f6fbef55645bd16",
+          "id": "span_f16242e38ffe547290cd",
+          "document_id": "doc_45af13c34eb95f89ae0c",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -306,8 +306,8 @@
           "original_text": "2.1. Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_557d6d90dcb65faea0b0",
-          "document_id": "doc_e91550a90c825f7b8b71",
+          "id": "span_1761cd39f26759f68b2a",
+          "document_id": "doc_af6b4a92d4e552a19ef0",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -343,8 +343,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_431fa719bf31503e9150",
-          "document_id": "doc_df8f110364b15adc8ecc",
+          "id": "span_a1d23e7603bb5b0788f0",
+          "document_id": "doc_43cf432be5615978a471",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -353,8 +353,8 @@
           "original_text": "2.1. Контролирует выполнение рекомендаций по итогам проверок."
         },
         {
-          "id": "span_804d74fa628b58a4902e",
-          "document_id": "doc_66e2ec50d107505ba5cd",
+          "id": "span_cba23673a20f53a7ae48",
+          "document_id": "doc_a863d5ad49865c539753",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -391,8 +391,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_2219be50e99f51e8bf41",
-          "document_id": "doc_a04f4a2265a1529bab89",
+          "id": "span_9137c3337ba45a848680",
+          "document_id": "doc_26e704fd1562557c8e38",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -401,8 +401,8 @@
           "original_text": "2.1. Контролирует закупки оборудования и обучение сотрудников."
         },
         {
-          "id": "span_5f6eb2ea087556f58932",
-          "document_id": "doc_2710ba58a9e25872a980",
+          "id": "span_c2af47a4bf665838aadb",
+          "document_id": "doc_76d09274022b5a3689c4",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -411,8 +411,8 @@
           "original_text": "2.1. Контролирует закупки оборудования."
         },
         {
-          "id": "span_3ce9d9fb1ba552318816",
-          "document_id": "doc_2710ba58a9e25872a980",
+          "id": "span_abfc9a317acb5b7da7e6",
+          "document_id": "doc_76d09274022b5a3689c4",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -449,8 +449,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_1398924d1d815e438051",
-          "document_id": "doc_6b7ea0b776b75d52ae73",
+          "id": "span_6bc6d5ab85b05dff9204",
+          "document_id": "doc_90afed07ecd754d585ec",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -459,8 +459,8 @@
           "original_text": "2.1. Контролирует закупки оборудования."
         },
         {
-          "id": "span_ef8565a20c55531fb0fb",
-          "document_id": "doc_4a942bb10b0b5632b354",
+          "id": "span_d1141a3fdbc3544c96df",
+          "document_id": "doc_77e08bb3cda25b198879",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -469,8 +469,8 @@
           "original_text": "2.1. Контролирует закупки оборудования и обучение сотрудников."
         },
         {
-          "id": "span_f3d4376cb2845d808b32",
-          "document_id": "doc_6b7ea0b776b75d52ae73",
+          "id": "span_d104bd02af3455a2b1ac",
+          "document_id": "doc_90afed07ecd754d585ec",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -506,8 +506,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_8f654d5f693d557b953d",
-          "document_id": "doc_9d47c4e7d0de579e8ebc",
+          "id": "span_f64b6b9954505d7f886e",
+          "document_id": "doc_f25f7a8ff3aa51edb594",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -516,8 +516,8 @@
           "original_text": "Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_070118d575295c49aa1f",
-          "document_id": "doc_fd5a00ec7536593f82dd",
+          "id": "span_4bbdbb9bdb8b5ff0bbb7",
+          "document_id": "doc_1a2326cd011a5f84bfe7",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -554,8 +554,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_e6391c9f644d5ff894e2",
-          "document_id": "doc_92dd4ef09ee250ba9666",
+          "id": "span_3ce0dd8c389c571d9948",
+          "document_id": "doc_cdc9732019445ce19f60",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -564,8 +564,8 @@
           "original_text": "2.1. Проверяет соблюдение стандартов информационной безопасности."
         },
         {
-          "id": "span_857ca4ec4fd75b8d825e",
-          "document_id": "doc_230f425d0fd953b4b0ba",
+          "id": "span_190e288f1b9551d18ba3",
+          "document_id": "doc_bae449fe063a55009eda",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -604,8 +604,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_19751661faa55e35b2ae",
-          "document_id": "doc_9c0bd7eb96a751a8a5cc",
+          "id": "span_0ddfa736d0895b5cbe87",
+          "document_id": "doc_fd6f3adfef2e53d784b0",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -614,8 +614,8 @@
           "original_text": "2.1. Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_cdeed1786bca5927809d",
-          "document_id": "doc_99ab13cc26775ab58f07",
+          "id": "span_4515f518b095517cba77",
+          "document_id": "doc_3a7d943d2a0f5464accf",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -657,8 +657,8 @@
       "run_status": "partial",
       "sources": [
         {
-          "id": "span_db9e06e942de58cf8827",
-          "document_id": "doc_ecfbcc357a2c52678b45",
+          "id": "span_813945d63a0d5f759706",
+          "document_id": "doc_2ca9160aaac55e3f85a8",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -667,8 +667,8 @@
           "original_text": "2.1. Проверяет соблюдение стандартов информационной безопасности."
         },
         {
-          "id": "span_def0078eecc25f548838",
-          "document_id": "doc_18cffd3f63555420a7c0",
+          "id": "span_8dbc024e1a725afb94fd",
+          "document_id": "doc_edfebcffdac0505c9cf2",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -733,8 +733,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_72b1a9fb604b5fd58307",
-          "document_id": "doc_75c3c068099d5ff0a553",
+          "id": "span_67f109321abb57f09a47",
+          "document_id": "doc_b5c3fe5da3755e8fb407",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -743,8 +743,8 @@
           "original_text": "Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_3feab59026945be3a152",
-          "document_id": "doc_4e77e4816e4350f0af8b",
+          "id": "span_82c94357fa4e58fa8253",
+          "document_id": "doc_5402c92165e25671acc9",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -753,8 +753,8 @@
           "original_text": "2.1. Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_35ce90bb98c8548baa93",
-          "document_id": "doc_4e77e4816e4350f0af8b",
+          "id": "span_e28943e7d0885002a5dc",
+          "document_id": "doc_5402c92165e25671acc9",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -792,8 +792,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_337c3d4f8c955a5198f7",
-          "document_id": "doc_901b837759a65be9bfa6",
+          "id": "span_69a3231e443755a09f4e",
+          "document_id": "doc_1f79a92c2b6950818c9c",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -802,8 +802,8 @@
           "original_text": "Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_bf6f30cb1b465c828102",
-          "document_id": "doc_0091bdaf823751eba6a1",
+          "id": "span_ec231d785a4a5801b10e",
+          "document_id": "doc_fc45d6531250597ab3f3",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -812,8 +812,8 @@
           "original_text": "Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_806600d2c63c5259b1f5",
-          "document_id": "doc_0091bdaf823751eba6a1",
+          "id": "span_21da15caaa2a5474a67d",
+          "document_id": "doc_fc45d6531250597ab3f3",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -852,8 +852,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_edc59c9776e25692996a",
-          "document_id": "doc_d24d0dc472455af69118",
+          "id": "span_488ccf6ae21d5e289a68",
+          "document_id": "doc_235f56d212da5f8a820e",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -862,8 +862,8 @@
           "original_text": "Организует аудит информационных систем и данных."
         },
         {
-          "id": "span_68ed4d0bef115dfd8845",
-          "document_id": "doc_0250207862db5c7e8ef9",
+          "id": "span_29f982dabbd45e0b9cae",
+          "document_id": "doc_5e1c325cd8d15c918363",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -872,8 +872,8 @@
           "original_text": "2.1. Организует аудит информационных систем и данных."
         },
         {
-          "id": "span_ae05334abdcd519d91f4",
-          "document_id": "doc_0250207862db5c7e8ef9",
+          "id": "span_c64382ed1dfd5ff8b70d",
+          "document_id": "doc_5e1c325cd8d15c918363",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -912,8 +912,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_fe37352ce96e5f9f8689",
-          "document_id": "doc_fde636c02cf757ad8d54",
+          "id": "span_1980c7efc209545a933b",
+          "document_id": "doc_8bd1ad4cab2e53a18a52",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -922,8 +922,8 @@
           "original_text": "Организует работу подразделения."
         },
         {
-          "id": "span_0d79df7b6cbc536c88ce",
-          "document_id": "doc_30b507b357dc5f7f8bf3",
+          "id": "span_907660537590588f997f",
+          "document_id": "doc_e85f8141fe7b53bca1f1",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -932,8 +932,8 @@
           "original_text": "2.1. Организует работу подразделения."
         },
         {
-          "id": "span_0e8dfe8cf39a585bb35a",
-          "document_id": "doc_30b507b357dc5f7f8bf3",
+          "id": "span_fde3ae8e5cc15e89b4ed",
+          "document_id": "doc_e85f8141fe7b53bca1f1",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -972,8 +972,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_19bc2796eaf35fba809d",
-          "document_id": "doc_36557a82125f5cd88d2f",
+          "id": "span_092ce603481f5a668076",
+          "document_id": "doc_1c41c15615505a73b77a",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -982,8 +982,8 @@
           "original_text": "Проводит проверку качества закупочной деятельности."
         },
         {
-          "id": "span_ea68944035fe5724950d",
-          "document_id": "doc_ac0d7f2f473d5dc38d7b",
+          "id": "span_296820b253e55d2aaaca",
+          "document_id": "doc_f2aea8cff34a5203aa69",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -992,8 +992,8 @@
           "original_text": "Проводит проверку качества закупочной деятельности."
         },
         {
-          "id": "span_8438ca9e94f15627b161",
-          "document_id": "doc_ac0d7f2f473d5dc38d7b",
+          "id": "span_cfc4c2f7ec6359b18a88",
+          "document_id": "doc_f2aea8cff34a5203aa69",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -1033,8 +1033,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_0ed600e8c8755021b920",
-          "document_id": "doc_ecdc596563a359a780a9",
+          "id": "span_e597202d95c959b6b663",
+          "document_id": "doc_ecfc2b89d5d0558996c2",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -1043,8 +1043,8 @@
           "original_text": "Проводит проверку качества закупочной деятельности."
         },
         {
-          "id": "span_b0968a154eff5f04bbab",
-          "document_id": "doc_70a5df7549985a68aad9",
+          "id": "span_34a6f08cd348562182ff",
+          "document_id": "doc_3f7e3954659a5ff5bd88",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -1053,8 +1053,8 @@
           "original_text": "2.1. Проводит проверку качества закупочной деятельности."
         },
         {
-          "id": "span_caa07e174a3a5e0da8d4",
-          "document_id": "doc_70a5df7549985a68aad9",
+          "id": "span_227dd844cdd459dc81ec",
+          "document_id": "doc_3f7e3954659a5ff5bd88",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -1091,8 +1091,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_6ad6a1896da05c3f8a4e",
-          "document_id": "doc_3ddb817346cd568dbbc7",
+          "id": "span_d46aff3a7b5758a48f18",
+          "document_id": "doc_5fe360a02e8e5f288f01",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -1101,8 +1101,8 @@
           "original_text": "Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_cb54734f1c55575490fa",
-          "document_id": "doc_9aabf63ef6205d9b8323",
+          "id": "span_d639be5f80de5177a065",
+          "document_id": "doc_be1afaae3d3f5f269f72",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",
@@ -1139,8 +1139,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_bbd3ee0f6e9559efad6a",
-          "document_id": "doc_e7a2f74d3fc75a009228",
+          "id": "span_3ec52855c92f5fbc8ce5",
+          "document_id": "doc_f37d441a4c455d588a97",
           "side": "before",
           "filename": "synthetic_revision_8.xlsx",
           "revision": "версия не указана",
@@ -1149,8 +1149,8 @@
           "original_text": "Отдел закупок | Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_9e411c28f36f51538342",
-          "document_id": "doc_928329a8bf34517d8d3e",
+          "id": "span_5539c94059a9595bb309",
+          "document_id": "doc_e891b8112ae055ad8fb3",
           "side": "after",
           "filename": "synthetic_revision_9.xlsx",
           "revision": "версия не указана",
@@ -1187,8 +1187,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_80616eb5740d55fe87ca",
-          "document_id": "doc_ab46d34be7bc5a4d8782",
+          "id": "span_3c375f0071555226bfbe",
+          "document_id": "doc_d664af3695b056ed82cd",
           "side": "before",
           "filename": "synthetic_revision_8.pdf",
           "revision": "версия не указана",
@@ -1197,8 +1197,8 @@
           "original_text": "2. Директор закупок: 2.1. Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_64f6022e61d652f4b219",
-          "document_id": "doc_94f4c15bac0f5bbfb70f",
+          "id": "span_a8fd74544b805b0781f7",
+          "document_id": "doc_6407ccfce04c50369d76",
           "side": "after",
           "filename": "synthetic_revision_9.pdf",
           "revision": "версия не указана",
@@ -1235,8 +1235,8 @@
       "run_status": "completed",
       "sources": [
         {
-          "id": "span_bbdb23f5164d5fe6bcb5",
-          "document_id": "doc_be7f1d278f1f5a098747",
+          "id": "span_36b223f6975456fa9b27",
+          "document_id": "doc_a0a2a6dbb9f2518cb918",
           "side": "before",
           "filename": "synthetic_revision_8.docx",
           "revision": "версия не указана",
@@ -1245,8 +1245,8 @@
           "original_text": "2.1. Контролирует качество закупочной деятельности."
         },
         {
-          "id": "span_aca9ca9b0a7a561aa2e4",
-          "document_id": "doc_fa096e6bb2b65e77bd8f",
+          "id": "span_6578d11fcaf55e7f90b2",
+          "document_id": "doc_c85eea96ac545c3bbc6b",
           "side": "after",
           "filename": "synthetic_revision_9.docx",
           "revision": "версия не указана",

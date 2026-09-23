@@ -76,6 +76,8 @@ def main():
         os.environ['BAQBAQ_DB_PATH']=str(Path(work)/'evaluation.db')
         os.environ['BAQBAQ_UPLOAD_DIR']=str(Path(work)/'uploads')
         os.environ['BAQBAQ_MODEL_MODE']='offline'
+        os.environ['BAQBAQ_AUTH_PASSWORD_HASH']=''
+        os.environ['BAQBAQ_AUTH_SECRET']=''
         os.environ.setdefault('BAQBAQ_SEARCH_MODE','lexical')
         from fastapi.testclient import TestClient
         from app.main import app

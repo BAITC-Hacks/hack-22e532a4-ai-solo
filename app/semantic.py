@@ -30,7 +30,22 @@ ACTION_ROOTS = (
     "организ", "осуществ", "обеспеч", "контрол", "анализ", "готов", "взаимодейств", "запраш",
     "разрабаты", "представ", "утверж", "провер", "выяв", "оцени", "провод", "формир", "координир",
     "руковод", "монитор", "соглас", "участв", "информ", "определ", "рассматри", "несет", "поруч",
+    "корректир", "пересматри", "вед", "хран", "регистрир", "обновл", "составл", "выполн", "исполн",
 )
+
+# Match verbal morphology, not nouns such as «управление», «мониторинга» or «контроля».
+ACTION_WORD = re.compile(r'\b(?:организ|осуществ|обеспеч|контрол|анализ|готов|взаимодейств|запраш|'
+    r'разрабаты|представ|утверж|провер|выяв|оцени|провод|формир|координир|руковод|монитор|соглас|'
+    r'участв|информ|определ|рассматри|поруч|корректир|пересматри|хран|регистрир|обновл|составл|'
+    r'выполн|исполн)[а-яё]*(?:ет|ёт|ют|ут|ит|ат|ят|ть)(?:ся|сь)?\b|\b(?:ведет|ведёт|ведут|вести|несет|несёт|несут|нести)\b', re.I)
+
+
+def semantic_guards(text: str) -> dict:
+    """Meaning-bearing qualifiers must not disappear into similarity stop words."""
+    lower = text.lower().replace('ё', 'е')
+    return {'negated': bool(re.search(r'\bне\s+(?!реже\b|менее\b|позднее\b)\w*(?:ет|ют|ит|ать|ять|ть|ут)(?:ся)?\b', lower)),
+            'modality': 'optional' if re.search(r'\b(?:может|могут|вправе)\b', lower) else 'required',
+            'frequency': tuple(re.findall(r'ежегод\w*|ежемесяч\w*|ежеквартал\w*|ежеднев\w*|(?:\w+\s+)?раз\w*\s+в\s+\w+', lower))}
 
 
 @lru_cache(maxsize=8192)
@@ -85,10 +100,8 @@ def similarity(left: str, right: str) -> float:
 
 
 def best_action(text: str) -> str:
-    for raw in re.findall(r"[а-яё]+", text.lower()):
-        if any(raw.startswith(root) for root in ACTION_ROOTS):
-            return raw
-    return "описывает"
+    match = ACTION_WORD.search(text)
+    return match.group(0).lower() if match else "описывает"
 
 
 def authority(text: str) -> str:
@@ -123,8 +136,4 @@ def scope_conflicts(left: str, right: str) -> bool:
 
 
 def has_action(text: str) -> bool:
-    lower = text.lower()
-    words = re.findall(r'[а-яё]+', lower)
-    return any(word.startswith(root) for word in words
-               if not word.startswith(('информац', 'организацион', 'контрольн', 'проверочн', 'оценочн', 'подготовлен'))
-               for root in ACTION_ROOTS)
+    return bool(ACTION_WORD.search(text))

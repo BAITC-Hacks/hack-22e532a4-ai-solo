@@ -34,11 +34,15 @@ def _source(source: dict[str, Any] | None) -> str:
 def markdown_report(comparison: dict[str, Any], result: dict[str, Any]) -> str:
     findings = result.get("findings", [])
     counts = Counter(item["finding_type"] for item in findings)
+    priorities = {'insufficient_data':0,'potential_loss':1,'potential_conflict':2,'possible_duplicate':3,'changed':4,'transferred':5,'split':6,'merged':7}
+    findings = sorted(findings,key=lambda item: priorities.get(item['finding_type'], 10))
+    run = result.get('run') or {}
+    metadata = result.get('metadata') or {}
     lines = [
         f"# Аналитическое заключение BaqBaq — {comparison['name']}",
         "",
         f"Анализ завершён: {(result.get('run') or {}).get('completed_at') or 'не завершён'}",
-        f"Режим модели: **{comparison['model_mode']}**",
+        f"Режим модели: **{run.get('model_mode', comparison['model_mode'])}**",
         "",
         "> Выводы носят рекомендательный характер и требуют проверки ответственным сотрудником.",
         "",
@@ -49,6 +53,23 @@ def markdown_report(comparison: dict[str, Any], result: dict[str, Any]) -> str:
     ]
     if (result.get('run') or {}).get('status') == 'partial':
         lines += ['> НЕПОЛНЫЙ АНАЛИЗ: отсутствие вывода не означает отсутствие риска.', '']
+    for warning in metadata.get('extraction_warnings', []):
+        lines.append(f"- Предупреждение извлечения [{warning.get('side')}, {warning.get('source_id') or 'источник не установлен'}]: {warning['reason']}")
+    risk_count = sum(counts[k] for k in ('potential_loss','potential_conflict','possible_duplicate'))
+    pending = sum(not f.get('review') or f['review']['decision']=='review' for f in findings)
+    lines += [f"Индикаторов риска: {risk_count}. Выводов без окончательного решения сотрудника: {pending}.",
+              'Сначала проверьте риски и неполные данные; сохранённые функции приведены в конце реестра.', '',
+              '## Приоритетные действия', '']
+    actions={'potential_loss':'Проверить полный комплект и назначенного владельца обязанности.',
+             'possible_duplicate':'Сверить область ответственности и полномочия обоих владельцев.',
+             'potential_conflict':'Проверить разделение исполнения и независимого контроля.',
+             'insufficient_data':'Добавить читаемые документы и пересчитать анализ.'}
+    for item in findings:
+        if item['finding_type'] in actions:
+            lines.append(f"- {item['title']} — {_source(item.get('before_source') or item.get('after_source'))}: {actions[item['finding_type']]}")
+    if not risk_count and not counts['insufficient_data']:
+        lines.append('В этом запуске алгоритм не сформировал индикаторов риска. Это не гарантия их отсутствия.')
+    lines += ['', '## Состав и показатели', '']
     for document in result.get('documents', []):
         lines.append(f"- Комплект {document['side']}: {document['filename']}; SHA-256 {document['sha256']}; {document['status']}")
     if not findings:
@@ -78,6 +99,9 @@ def markdown_report(comparison: dict[str, Any], result: dict[str, Any]) -> str:
             for source in (item.get('before_source'), item.get('after_source')):
                 if source:
                     lines += [f"- Точная цитата [{source['side']}, {source['id']}]: {source['original_text']}", '']
+            for source in item.get('before_context', []) + item.get('after_context', []):
+                if source:
+                    lines += [f"- Вводный пункт [{_source(source)}]: {source['original_text']}", '']
     lines += [
         "## Ограничения",
         "",
@@ -95,6 +119,11 @@ def markdown_report(comparison: dict[str, Any], result: dict[str, Any]) -> str:
         "## Прослеживаемость",
         "",
         f"Analysis run: `{(result.get('run') or {}).get('id', 'не выполнен')}`.",
+        f"SHA-256 входа: {run.get('input_hash', 'не указан')}",
+        f"SHA-256 кода анализа: {metadata.get('source_sha256', 'не указан')}",
+        f"Алгоритм: {metadata.get('algorithm_version', 'не указан')}; поиск: {metadata.get('search_mode', 'не указан')}; модель: {run.get('model_name', 'не указана')}",
+        f"Последнее решение сотрудника: {max((f['review']['created_at'] for f in findings if f.get('review')),default='решений нет')}",
+        "Машинный результат закреплён за запуском. Этот экспорт включает текущие решения сотрудника; сохраните файл для фиксации версии заключения.",
         "Цитаты в интерфейсе и отчёте подставлены из exact store, а не из свободного ответа модели.",
     ]
     return "\n".join(lines)
